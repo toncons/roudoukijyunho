@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社労士試験対策｜労働基準法 過去問一問一答 200問</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans JP & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* カスタムスクロールバーと微調整 */
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation; /* iPhone Safariでのダブルタップズーム防止 */
+        }
+        button, select {
+            touch-action: manipulation;
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popBounce {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .pop-bounce {
+            animation: popBounce 0.22s ease-out forwards;
+        }
+        .btn-press:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ヘッダー -->
+    <header class="bg-brand-900 text-white shadow-md sticky top-0 z-30">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <div class="bg-brand-600 p-2 rounded-lg">
+                    <i class="fa-solid fa-scale-balanced text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold tracking-tight leading-tight">社労士試験 過去問演習</h1>
+                    <p class="text-xs text-brand-100">労働基準法（過去10年分傾向・全200問）</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="toggleListModal()" class="bg-brand-800 hover:bg-brand-700 text-xs sm:text-sm px-3 py-2 rounded-lg font-medium transition flex items-center space-x-1.5 border border-brand-700">
+                    <i class="fa-solid fa-list-ol"></i>
+                    <span>問題一覧</span>
+                </button>
+                <button onclick="confirmReset()" class="bg-slate-700 hover:bg-slate-600 text-xs sm:text-sm px-3 py-2 rounded-lg font-medium transition flex items-center space-x-1" title="学習履歴をリセット">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">リセット</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-5 space-y-5">
+
+        <!-- 進捗・フィルターダッシュボード -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+            <!-- ステータスバー -->
+            <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-4 text-center">
+                <div class="bg-slate-50 rounded-xl p-2.5 border border-slate-100">
+                    <div class="text-xs text-slate-500 font-medium">演習進捗</div>
+                    <div class="text-lg sm:text-xl font-bold text-slate-800 mt-0.5">
+                        <span id="stat-answered">0</span><span class="text-xs font-normal text-slate-500"> / 200問</span>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 rounded-xl p-2.5 border border-emerald-100">
+                    <div class="text-xs text-emerald-700 font-medium">正解数</div>
+                    <div class="text-lg sm:text-xl font-bold text-emerald-600 mt-0.5">
+                        <span id="stat-correct">0</span><span class="text-xs font-normal text-emerald-600"> 問</span>
+                    </div>
+                </div>
+                <div class="bg-brand-50 rounded-xl p-2.5 border border-brand-100">
+                    <div class="text-xs text-brand-700 font-medium">正答率</div>
+                    <div class="text-lg sm:text-xl font-bold text-brand-600 mt-0.5">
+                        <span id="stat-rate">0</span><span class="text-xs font-normal text-brand-600"> %</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- プログレスバー -->
+            <div class="w-full bg-slate-100 rounded-full h-2 mb-4 overflow-hidden">
+                <div id="progress-bar" class="bg-brand-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- 絞り込みフィルター -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div>
+                    <label for="filter-category" class="block text-xs font-semibold text-slate-500 mb-1">分野で絞り込み</label>
+                    <select id="filter-category" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="all">すべての分野（200問）</option>
+                        <option value="総則・基本原則">1. 総則・基本原則（25問）</option>
+                        <option value="労働契約・解雇">2. 労働契約・解雇（30問）</option>
+                        <option value="賃金・割増賃金">3. 賃金・割増賃金（30問）</option>
+                        <option value="労働時間・休憩・休日">4. 労働時間・休憩・休日（35問）</option>
+                        <option value="変形労働・フレックス・みなし">5. 変形労働・みなし労働（25問）</option>
+                        <option value="年次有給休暇">6. 年次有給休暇（20問）</option>
+                        <option value="年少者・妊産婦等">7. 年少者・妊産婦等（15問）</option>
+                        <option value="就業規則・制裁・監督等">8. 就業規則・制裁・監督等（20問）</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filter-year" class="block text-xs font-semibold text-slate-500 mb-1">出題年度（過去10年）</label>
+                    <select id="filter-year" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="all">全年度（H28〜R7）</option>
+                        <option value="令和7年">令和7年度（2025）</option>
+                        <option value="令和6年">令和6年度（2024）</option>
+                        <option value="令和5年">令和5年度（2023）</option>
+                        <option value="令和4年">令和4年度（2022）</option>
+                        <option value="令和3年">令和3年度（2021）</option>
+                        <option value="令和2年">令和2年度（2020）</option>
+                        <option value="令和元年">令和元年度（2019）</option>
+                        <option value="平成30年">平成30年度（2018）</option>
+                        <option value="平成29年">平成29年度（2017）</option>
+                        <option value="平成28年">平成28年度（2016）</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="filter-status" class="block text-xs font-semibold text-slate-500 mb-1">学習状況</label>
+                    <select id="filter-status" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="all">すべて表示</option>
+                        <option value="unanswered">未解答のみ</option>
+                        <option value="incorrect">不正解のみ（弱点克服）</option>
+                        <option value="bookmarked">要復習チェックのみ</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- 問題カード -->
+        <section id="question-container" class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+            <!-- カード上部メタ情報 -->
+            <div class="bg-slate-50 px-5 py-3.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center space-x-2">
+                    <span id="q-number-badge" class="bg-brand-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">第 1 問</span>
+                    <span id="q-category-badge" class="bg-slate-200 text-slate-700 text-xs font-semibold px-2.5 py-1 rounded-lg">総則・基本原則</span>
+                    <span id="q-year-badge" class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-lg">令和7年出題</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="q-filtered-pos" class="text-xs text-slate-500 font-medium">1 / 200</span>
+                    <button id="bookmark-btn" onclick="toggleBookmark()" class="text-slate-400 hover:text-amber-500 transition p-1" title="要復習マークをつける">
+                        <i class="fa-regular fa-star text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 問題文エリア -->
+            <div class="p-5 sm:p-7">
+                <div class="mb-2 flex items-center space-x-2">
+                    <span id="q-history-badge" class="hidden text-xs font-semibold px-2 py-0.5 rounded"></span>
+                </div>
+                <p id="q-text" class="text-base sm:text-lg leading-relaxed font-medium text-slate-800 whitespace-pre-line">
+                    問題を読み込み中...
+                </p>
+
+                <!-- ○×選択エリア -->
+                <div class="mt-7">
+                    <p class="text-xs font-semibold text-slate-500 text-center mb-3">「○」または「×」をタップして回答してください</p>
+                    <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                        <button id="btn-choice-true" onclick="selectChoice(true)" class="btn-press flex flex-col items-center justify-center py-4 px-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-brand-400 hover:bg-brand-50/40 transition shadow-sm">
+                            <span class="text-3xl sm:text-4xl font-bold text-rose-600 leading-none">○</span>
+                            <span class="text-xs font-bold text-slate-600 mt-1.5">正しい</span>
+                        </button>
+                        <button id="btn-choice-false" onclick="selectChoice(false)" class="btn-press flex flex-col items-center justify-center py-4 px-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-brand-400 hover:bg-brand-50/40 transition shadow-sm">
+                            <span class="text-3xl sm:text-4xl font-bold text-blue-600 leading-none">×</span>
+                            <span class="text-xs font-bold text-slate-600 mt-1.5">誤り</span>
+                        </button>
+                    </div>
+
+                    <!-- ○×押下時の即時正誤リアクションバナー -->
+                    <div id="instant-feedback" class="hidden max-w-md mx-auto mt-4 rounded-xl p-3.5 flex items-center justify-between shadow-xs pop-bounce">
+                        <div class="flex items-center space-x-3">
+                            <div id="instant-icon" class="w-9 h-9 rounded-full flex items-center justify-center text-white text-lg shrink-0"></div>
+                            <div>
+                                <div id="instant-title" class="font-bold text-base leading-tight"></div>
+                                <div id="instant-subtitle" class="text-xs opacity-90 mt-0.5"></div>
+                            </div>
+                        </div>
+                        <div class="text-right pl-2">
+                            <span class="text-[11px] block opacity-75">正解</span>
+                            <span id="instant-correct-symbol" class="text-2xl font-extrabold leading-none"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 解答確認ボタン -->
+                <div class="mt-5 max-w-md mx-auto">
+                    <button id="btn-check-answer" onclick="checkAnswer()" class="btn-press w-full py-3.5 px-6 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-base shadow-md hover:shadow-lg transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>解答・解説を確認する</span>
+                    </button>
+                </div>
+
+                <!-- 解答・解説エリア（初期非表示） -->
+                <div id="answer-panel" class="hidden mt-6 pt-5 border-t-2 border-dashed border-slate-200 fade-in">
+                    <!-- 正誤判定バナー -->
+                    <div id="result-banner" class="rounded-xl p-4 mb-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div id="result-icon" class="w-10 h-10 rounded-full flex items-center justify-center text-white text-xl font-bold"></div>
+                            <div>
+                                <div id="result-title" class="font-bold text-lg"></div>
+                                <div id="result-subtitle" class="text-xs opacity-90"></div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs block opacity-75">正解</span>
+                            <span id="correct-answer-symbol" class="text-2xl font-extrabold"></span>
+                        </div>
+                    </div>
+
+                    <!-- 条文・解説ボックス -->
+                    <div class="bg-slate-50 rounded-xl p-4 sm:p-5 border border-slate-200 space-y-2.5">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <span class="text-xs font-bold text-brand-700 bg-brand-100 px-2.5 py-1 rounded-md">
+                                <i class="fa-solid fa-book-open mr-1"></i>解説・根拠条文
+                            </span>
+                            <span id="q-law-ref" class="text-xs font-semibold text-slate-500"></span>
+                        </div>
+                        <p id="q-explanation" class="text-sm sm:text-base leading-relaxed text-slate-700"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- フッターナビゲーション -->
+            <div class="bg-slate-50 px-5 py-3.5 border-t border-slate-200 flex items-center justify-between">
+                <button id="btn-prev" onclick="prevQuestion()" class="btn-press px-4 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition flex items-center space-x-1.5 disabled:opacity-40 disabled:pointer-events-none">
+                    <i class="fa-solid fa-chevron-left"></i>
+                    <span>前の問題</span>
+                </button>
+
+                <button onclick="randomQuestion()" class="btn-press px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-600 font-medium text-xs sm:text-sm transition flex items-center space-x-1.5" title="現在の絞り込み条件からランダム出題">
+                    <i class="fa-solid fa-shuffle"></i>
+                    <span>ランダム</span>
+                </button>
+
+                <button id="btn-next" onclick="nextQuestion()" class="btn-press px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition flex items-center space-x-1.5 disabled:opacity-40 disabled:pointer-events-none">
+                    <span>次の問題</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 絞り込み結果が0件の場合の表示 -->
+        <section id="empty-state" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center space-y-4">
+            <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-filter-circle-xmark"></i>
+            </div>
+            <h2 class="text-lg font-bold text-slate-800">条件に一致する問題がありません</h2>
+            <p class="text-sm text-slate-500">フィルター条件を変更して再度お試しください。</p>
+            <button onclick="resetFilters()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-xl transition">
+                フィルターを解除する
+            </button>
+        </section>
+
+    </main>
+
+    <!-- フッター -->
+    <footer class="max-w-4xl mx-auto px-4 py-6 text-center text-xs text-slate-400">
+        <p>社会保険労務士試験対策 労働基準法 過去10年分（平成28年〜令和7年）出題論点網羅 200問</p>
+        <p class="mt-1">※学習進捗はブラウザに自動保存されます。</p>
+    </footer>
+
+    <!-- 問題一覧モーダル -->
+    <div id="list-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-base">全200問 一覧ジャンプ</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1"></span>正解
+                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 ml-2 mr-1"></span>不正解
+                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-slate-200 ml-2 mr-1"></span>未解答
+                    </p>
+                </div>
+                <button onclick="toggleListModal()" class="w-8 h-8 rounded-lg hover:bg-slate-200 flex items-center justify-center text-slate-500">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="question-grid" class="p-5 overflow-y-auto grid grid-cols-5 sm:grid-cols-10 gap-2">
+                <!-- JSで200問のボタンを生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- カスタム確認ダイアログ（alert/confirm代替） -->
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center space-y-4">
+            <div id="modal-icon-box" class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="modal-title" class="font-bold text-slate-800 text-lg">確認</h3>
+            <p id="modal-message" class="text-sm text-slate-600 leading-relaxed"></p>
+            <div id="modal-actions" class="flex space-x-3 pt-2">
+                <button id="modal-cancel-btn" onclick="closeCustomModal()" class="flex-1 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50">
+                    キャンセル
+                </button>
+                <button id="modal-confirm-btn" class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white font-semibold text-sm hover:bg-rose-700">
+                    実行する
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知トースト -->
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs sm:text-sm font-medium px-4 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-200 z-50">
+        メッセージ
+    </div>
+
+    <script>
+        /**
+         * 社労士試験 労働基準法 過去10年（平成28年〜令和7年）出題論点 全200問データベース
+         * 各問題オブジェクト:
+         * id: 1〜200
+         * category: 分野名
+         * year: 出題年度
+         * text: 問題文
+         * answer: true(○) または false(×)
+         * ref: 根拠条文・判例
+         * explanation: 詳しい解説
+         */
+        const QUESTIONS_DB = [
+            // =========================================================================
+            // 1. 総則・基本原則（第1問〜第25問）
+            // =========================================================================
+            {
+                id: 1,
+                category: "総則・基本原則",
+                year: "令和7年",
+                text: "労働基準法第1条にいう「労働条件」には、賃金、労働時間、解雇、災害補償等の基本的な労働条件のほか、寄宿舎に関する条件も含まれるが、安全衛生に関する条件は労働安全衛生法に委ねられているため含まれない。",
+                answer: false,
+                ref: "労働基準法第1条、昭22.9.13発基17号",
+                explanation: "誤りです。労働基準法第1条の「労働条件」とは、職場における一切の待遇をいい、賃金、労働時間はもちろん、解雇、災害補償、安全衛生、寄宿舎等に関する条件も含まれます。"
+            },
+            {
+                id: 2,
+                category: "総則・基本原則",
+                year: "令和6年",
+                text: "労働基準法第1条第2項は、「この法律で定める労働条件の基準は最低のものであるから、労働関係の当事者は、この基準を理由として労働条件を低下させてはならないことはもとより、その向上を図るように努めなければならない。」と規定しているが、社会経済情勢の変動等他に決定的な理由がある場合に労働条件を低下させることまで禁止するものではない。",
+                answer: true,
+                ref: "労働基準法第1条第2項、昭22.9.13発基17号",
+                explanation: "正しい記述です。同項は「この基準を理由として」労働条件を低下させることを禁止するものであり、社会経済情勢の変動等、他に決定的な理由がある場合に労働条件を引き下げることまで禁止する趣旨ではありません。"
+            },
+            {
+                id: 3,
+                category: "総則・基本原則",
+                year: "令和5年",
+                text: "労働基準法第2条第1項は、「労働条件は、労働者と使用者が、対等の立場において決定すべきものである。」と規定しているが、同項に違反した使用者に対しては罰則の適用がある。",
+                answer: false,
+                ref: "労働基準法第2条第1項",
+                explanation: "誤りです。労働基準法第2条（労働条件の決定）は訓示規定であり、違反に対する罰則は設けられていません。"
+            },
+            {
+                id: 4,
+                category: "総則・基本原則",
+                year: "令和4年",
+                text: "労働基準法第3条は、使用者が労働者の国籍、信条又は社会的身分を理由として、賃金、労働時間その他の労働条件について差別的取扱いをすることを禁止しているが、ここにいう「信条」には特定の宗教的信仰のほか特定の政治的信条も含まれる。",
+                answer: true,
+                ref: "労働基準法第3条、昭22.9.13発基17号",
+                explanation: "正しい記述です。第3条の「信条」とは、特定の宗教的又は政治的信念を意味します。なお、同条には「性別」は含まれていません（男女差別は第4条の賃金差別禁止及び男女雇用機会均等法で規制されます）。"
+            },
+            {
+                id: 5,
+                category: "総則・基本原則",
+                year: "令和3年",
+                text: "最高裁判所の判例（三菱樹脂事件）によれば、労働基準法第3条は労働者の雇入れそのもの（採用の自由）を制限するものではなく、雇入れ後における労働条件についての制限である。",
+                answer: true,
+                ref: "労働基準法第3条、最判昭48.12.12（三菱樹脂事件）",
+                explanation: "正しい記述です。判例では、第3条は雇入れ後の労働条件についての差別的取扱いを禁じたものであり、企業者の採用の自由（雇入れそのもの）を制限するものではないとされています。"
+            },
+            {
+                id: 6,
+                category: "総則・基本原則",
+                year: "令和2年",
+                text: "労働基準法第4条は、使用者が労働者が女性であることを理由として、賃金について男性と差別的取扱いをすることを禁止しているが、この規定は男性労働者に対する差別的取扱いについても同様に適用される。",
+                answer: true,
+                ref: "労働基準法第4条、平9.9.25婦発265号",
+                explanation: "正しい記述です。「女性であることを理由として、賃金について、男性と差別的取扱いをしてはならない」とは、女性であることを理由として男性より不利に取り扱う場合だけでなく、有利に取り扱う場合（結果として男性を差別する場合）も含まれます。"
+            },
+            {
+                id: 7,
+                category: "総則・基本原則",
+                year: "令和元年",
+                text: "就業規則において、労働者の職務能率や技能に関係なく、単に「女性であること」のみを理由として初任給や昇給の基準を男性より低く定めることは、労働基準法第4条違反となる。",
+                answer: true,
+                ref: "労働基準法第4条、昭22.9.13発基17号",
+                explanation: "正しい記述です。職務、能率、技能等の差異によるものではなく、単に女性であることのみを理由として賃金に差をつけることは第4条違反となります。"
+            },
+            {
+                id: 8,
+                category: "総則・基本原則",
+                year: "平成30年",
+                text: "労働基準法第5条は強制労働の禁止を定めており、暴行、脅迫、監禁その他精神又は身体の自由を不当に拘束する手段によって、労働者の意思に反して労働を強制した場合、実際に労働者が労働したか否かを問わず同条違反が成立する。",
+                answer: false,
+                ref: "労働基準法第5条、昭23.3.2基発381号",
+                explanation: "誤りです。第5条の強制労働の禁止は、不当な拘束手段を用いて「労働者の意思に反して労働を強制すること」を要件としており、実際に労働させたことを要します（未遂処罰規定はありません）。なお、同条違反は労働基準法上最も重い罰則（1年以上10年以下の懲役又は20万円以上300万円以下の罰金）が科されます。"
+            },
+            {
+                id: 9,
+                category: "総則・基本原則",
+                year: "平成29年",
+                text: "労働基準法第6条（中間搾取の排除）は、「何人も、法律に基いて許される場合の他、業として他人の就業に介入して利益を得てはならない。」と規定しており、営利を目的として反復継続して他人の就業に介入し利益を得る行為は、1回限りの行為であっても「業として」に該当する場合がある。",
+                answer: true,
+                ref: "労働基準法第6条、昭23.3.2基発381号",
+                explanation: "正しい記述です。「業として」とは、営利を目的として同種の行為を反復継続することをいいますが、反復継続の意思をもって行えば、たとえ1回の行為であっても「業として」に該当します。"
+            },
+            {
+                id: 10,
+                category: "総則・基本原則",
+                year: "平成28年",
+                text: "労働者が労働時間中に選挙権を行使するため必要な時間を請求した場合において、使用者は業務の都合上やむを得ないときは、その請求を拒むことができる。",
+                answer: false,
+                ref: "労働基準法第7条",
+                explanation: "誤りです。使用者は、労働者が労働時間中に選挙権その他公民としての権利を行使し、又は公の職務を執行するために必要な時間を請求した場合においては、拒んではなりません。ただし、権利の行使又は公の職務の執行に妨げがない限り、請求された時刻を変更することはできます。"
+            },
+            {
+                id: 11,
+                category: "総則・基本原則",
+                year: "令和7年",
+                text: "労働基準法第7条に規定する「公の職務」には、衆議院議員や地方公共団体の議会の議員の職務のほか、裁判員法に基づく裁判員の職務や、労働委員会の委員としての職務も含まれるが、予備自衛官が防衛招集等に応ずることは含まれない。",
+                answer: true,
+                ref: "労働基準法第7条、昭23.6.16基収1998号、昭29.7.19基収3310号",
+                explanation: "正しい記述です。裁判員や労働委員会委員は「公の職務」に含まれますが、予備自衛官の防衛招集や訓練招集に応じることは、第7条の「公の職務」には該当しないと解されています。"
+            },
+            {
+                id: 12,
+                category: "総則・基本原則",
+                year: "令和6年",
+                text: "労働基準法第7条に基づく公民権行使の時間の賃金については、有給とするか無給とするかは当事者の自由であり、無給としても同条違反にはならない。",
+                answer: true,
+                ref: "労働基準法第7条、昭22.11.27基発399号",
+                explanation: "正しい記述です。公民権行使の時間中の賃金については、労働基準法上特に規定がないため、有給でも無給でも差し支えありません。"
+            },
+            {
+                id: 13,
+                category: "総則・基本原則",
+                year: "令和5年",
+                text: "労働基準法第9条に規定する「労働者」とは、職業の種類を問わず、事業又は事務所に使用される者で、賃金を支払われる者をいうが、法人の代表取締役であっても、事実上業務執行権を有さず他の役員の指揮監督下で労務を提供し賃金を得ている実態がある場合は、労働基準法上の労働者に該当する。",
+                answer: false,
+                ref: "労働基準法第9条、昭23.3.17基発461号",
+                explanation: "誤りです。法人の代表者（代表取締役や代表理事など）は、対外的に法人を代表し業務執行権を有する機関であるため、労働基準法上の労働者には該当しません。なお、取締役や監査役など代表権のない役員については、業務執行権の有無や指揮監督関係・報酬の労務対償性などの実態により労働者性が判断されます。"
+            },
+            {
+                id: 14,
+                category: "総則・基本原則",
+                year: "令和4年",
+                text: "同居の親族のみを使用する事業については労働基準法は適用されないが、同居の親族であっても、常時同居の親族以外の労働者を使用する事業において、一般事務又は現場作業等に従事し、かつ、就労の実態が他の労働者と同様である場合は、労働基準法上の労働者として同法が適用される。",
+                answer: true,
+                ref: "労働基準法第116条第2項、昭54.4.2基発153号",
+                explanation: "正しい記述です。原則として同居の親族のみを使用する事業は適用除外ですが、同居の親族以外の労働者がいる事業で、業務を行うにつき事業主の指揮命令に従っていることが明確であり、就労の実態が当該事業場における他の労働者と同様である場合は、例外的に労働者として取り扱われます。"
+            },
+            {
+                id: 15,
+                category: "総則・基本原則",
+                year: "令和3年",
+                text: "労働基準法第10条に規定する「使用者」とは、事業主又は事業の経営担当者その他その事業の労働者に関する事項について、事業主のために行為をするすべての者をいい、部長、課長等の形式的な職制上の地位によって決定される。",
+                answer: false,
+                ref: "労働基準法第10条、昭22.9.13発基17号",
+                explanation: "誤りです。「使用者」に該当するか否かは、部長、課長等の形式的な職制上の名称ではなく、その職務の実質（労働者に関する事項について一定の権限と責任を与えられているか否か）によって判断されます。"
+            },
+            {
+                id: 16,
+                category: "総則・基本原則",
+                year: "令和2年",
+                text: "労働基準法第11条に規定する「賃金」とは、賃金、給料、手当、賞与その他名称の如何を問わず、労働の対償として使用者が労働者に支払うすべてのものをいうが、結婚祝金や死亡弔慰金について、労働協約、就業規則等によってあらかじめ支給条件が明確に定められている場合であっても、恩恵的給付であるから賃金には該当しない。",
+                answer: false,
+                ref: "労働基準法第11条、昭22.9.13発基17号",
+                explanation: "誤りです。結婚祝金、死亡弔慰金、災害見舞金等の恩恵的給付は原則として賃金ではありませんが、労働協約、就業規則、労働契約等によってあらかじめ支給条件が明確に定められているものは、使用者に支払義務が生じるため「賃金」に該当します。"
+            },
+            {
+                id: 17,
+                category: "総則・基本原則",
+                year: "令和元年",
+                text: "顧客から任意に支払われるチップ（心付け）は、労働者が直接顧客から受け取るものであっても、業務に関連して得られる収入であるため労働基準法第11条の賃金に該当する。",
+                answer: false,
+                ref: "労働基準法第11条、昭23.2.3基発164号",
+                explanation: "誤りです。客からの任意のチップは、使用者が支払うものではないため賃金には該当しません。ただし、使用者が一旦徴収して再配分するような場合は賃金に該当することがあります。"
+            },
+            {
+                id: 18,
+                category: "総則・基本原則",
+                year: "平成30年",
+                text: "平均賃金の算定に当たり、算定すべき事由の発生した日以前3か月間に、業務上負傷し療養のために休業した期間がある場合においては、その日数及びその期間中の賃金は、平均賃金の算定期間及び賃金の総額から控除する。",
+                answer: true,
+                ref: "労働基準法第12条第3項第1号",
+                explanation: "正しい記述です。①業務上の負傷・疾病による療養のための休業期間、②産前産後の女性が第65条の規定によって休業した期間、③使用者の責めに帰すべき事由によって休業した期間、④育児・介護休業期間、⑤試みの使用期間は、平均賃金の算定においてその日数及び賃金を控除します。"
+            },
+            {
+                id: 19,
+                category: "総則・基本原則",
+                year: "平成29年",
+                text: "平均賃金の算定期間である「以前3か月間」とは、原則として算定すべき事由の発生した日を含まないその前日から遡って3か月間をいい、賃金締切日がある場合においては、直前の賃金締切日から起算する（ただし、事由発生日が賃金締切日と一致する場合は、その日の直前の賃金締切日から起算する）。",
+                answer: true,
+                ref: "労働基準法第12条第1項・第2項、昭24.7.13基収2044号",
+                explanation: "正しい記述です。算定事由発生日が賃金締切日と一致する場合であっても、その日の直前の賃金締切日から遡って3か月間で計算します。"
+            },
+            {
+                id: 20,
+                category: "総則・基本原則",
+                year: "平成28年",
+                text: "平均賃金の算定に当たり、賃金の総額に算入される賃金には、臨時に支払われた賃金及び3か月を超える期間ごとに支払われる賃金も含まれる。",
+                answer: false,
+                ref: "労働基準法第12条第4項",
+                explanation: "誤りです。①臨時に支払われた賃金、②3か月を超える期間ごとに支払われる賃金（年2回の賞与など）、③通貨以外のもので支払われた賃金で一定の範囲に属しないものは、平均賃金の算定基礎となる賃金の総額には算入しません。"
+            },
+            {
+                id: 21,
+                category: "総則・基本原則",
+                year: "令和7年",
+                text: "年次有給休暇を取得した日の賃金として平均賃金を支払う場合において、その算定すべき事由の発生した日は、年次有給休暇を与えた日の初日である。",
+                answer: true,
+                ref: "労働基準法第12条第1項、昭22.12.19基発519号",
+                explanation: "正しい記述です。年次有給休暇の賃金に平均賃金を支払う場合の算定事由発生日は、その年次有給休暇を与えた日（2日以上連続する場合はその初日）となります。"
+            },
+            {
+                id: 22,
+                category: "総則・基本原則",
+                year: "令和6年",
+                text: "家事使用人については、法人に雇われその役職員の家庭において家事を行う者であっても、すべて労働基準法の適用が除外されている。",
+                answer: false,
+                ref: "労働基準法第116条第2項、昭63.3.14基発150号",
+                explanation: "誤りです。個人の家庭に雇われる家事使用人には労働基準法は適用されませんが、法人に雇われ、その役職員の家庭において家事を行う者（家政婦紹介所等から派遣される場合を含む）は、法人に使用される労働者として労働基準法が適用されます。"
+            },
+            {
+                id: 23,
+                category: "総則・基本原則",
+                year: "令和5年",
+                text: "労働基準法は原則として日本国内にある事業に適用されるが、日本国内に本社を有する企業が、海外の支店に労働者を派遣し、当該海外支店の指揮監督下で勤務させる場合、その海外支店での就労についても原則として日本の労働基準法が適用される。",
+                answer: false,
+                ref: "昭25.8.24基発776号",
+                explanation: "誤りです。労働基準法は属地主義を原則としており、日本国内にある事業に適用されます。海外の支店（独立した事業と認められるもの）に派遣されて勤務する場合は、原則として現地の法令が適用され、日本の労働基準法は適用されません（国内の事業から出張として一時的に海外で業務を行う場合は日本の労基法が適用されます）。"
+            },
+            {
+                id: 24,
+                category: "総則・基本原則",
+                year: "令和4年",
+                text: "労働基準法における「事業」の適用単位は、原則として経営の主体（法人全体）ではなく、工場、支店、営業所等の場所的観念によって決定されるが、場所的に分散していても規模が著しく小さく独立性のない出張所等は、直近上位の機構と一括して一の事業として取り扱われる。",
+                answer: true,
+                ref: "昭22.9.13発基17号、昭63.3.14基発150号",
+                explanation: "正しい記述です。労働基準法の適用単位は原則として場所的観念（一つの工場、一つの支店など）により決定されますが、独立性のない小規模な出張所や駐在所などは直近上位の機構と一括して一の事業とみなされます。"
+            },
+            {
+                id: 25,
+                category: "総則・基本原則",
+                year: "令和3年",
+                text: "使用者が労働基準法に違反する労働契約を締結した場合、その労働契約は全体として無効となる。",
+                answer: false,
+                ref: "労働基準法第13条",
+                explanation: "誤りです。労働基準法で定める基準に達しない労働条件を定める労働契約は、「その部分については無効」となり、無効となった部分は労働基準法で定める基準によることとされており、契約全体が無効になるわけではありません（直律的効力・補充的効力）。"
+            },
+
+            // =========================================================================
+            // 2. 労働契約・解雇（第26問〜第55問）
+            // =========================================================================
+            {
+                id: 26,
+                category: "労働契約・解雇",
+                year: "令和7年",
+                text: "労働契約は、期間の定めのないものを除き、一定の事業の完了に必要な期間を定めるもののほかは、3年（専門的知識等を有する労働者及び満60歳以上の労働者との間に締結される労働契約にあっては5年）を超える期間について締結してはならない。",
+                answer: true,
+                ref: "労働基準法第14条第1項",
+                explanation: "正しい記述です。有期労働契約の期間の上限は原則3年、高度の専門的知識等を有する労働者（一定の年収要件あり）及び満60歳以上の労働者との契約については特例として5年です。"
+            },
+            {
+                id: 27,
+                category: "労働契約・解雇",
+                year: "令和6年",
+                text: "満60歳以上の労働者との間に契約期間を5年とする有期労働契約を締結した場合、当該労働者は、契約期間の初日から1年を経過した日以後においては、使用者に申し出ることにより、いつでも退職することができる。",
+                answer: false,
+                ref: "労働基準法第137条",
+                explanation: "誤りです。労働基準法第137条により、1年を超える有期労働契約を締結した労働者が1年経過後にいつでも退職できるとする暫定措置は、原則上限である「3年」の契約を対象としており、第14条第1項各号に規定する特例（高度専門職及び満60歳以上の労働者との5年契約）は対象外です（これらの者はやむを得ない事由がなければ期間途中の退職はできません）。"
+            },
+            {
+                id: 28,
+                category: "労働契約・解雇",
+                year: "令和5年",
+                text: "使用者は、労働契約の締結に際し、労働者に対して賃金、労働時間その他の労働条件を明示しなければならないが、令和6年4月の法改正により、すべての労働者に対し、就業場所及び業務の「変更の範囲」についても書面の交付等により明示することが義務付けられた。",
+                answer: true,
+                ref: "労働基準法第15条第1項、同法施行規則第5条第1項第1号の3",
+                explanation: "正しい記述です。令和6年4月1日施行の労働基準法施行規則改正により、労働契約締結時の絶対的明示事項（書面交付等が必要）として、従来の「雇入れ直後の就業場所・従事すべき業務」に加え、「就業場所及び業務の変更の範囲」の明示がすべての労働者に対して義務化されました。"
+            },
+            {
+                id: 29,
+                category: "労働契約・解雇",
+                year: "令和6年",
+                text: "使用者は、有期労働契約を締結する労働者に対しては、契約締結時に「更新上限（通算契約期間又は更新回数の上限）の有無及びその内容」を明示しなければならないが、無期転換申込権が発生する更新のタイミングにおける「無期転換申込機会」や「無期転換後の労働条件」については、労働者から請求があった場合にのみ明示すれば足りる。",
+                answer: false,
+                ref: "労働基準法第15条第1項、同法施行規則第5条第1項・第5項・第6項",
+                explanation: "誤りです。令和6年4月の改正により、有期労働契約の締結時・更新時に「更新上限の有無と内容」の明示が義務化されたほか、無期転換申込権が発生する更新のタイミングごとに「無期転換を申し込むことができる旨」及び「無期転換後の労働条件」を、労働者の請求の有無にかかわらず書面交付等により明示することが義務付けられました。"
+            },
+            {
+                id: 30,
+                category: "労働契約・解雇",
+                year: "令和4年",
+                text: "労働契約締結時に明示された労働条件が事実と相違する場合においては、労働者は、即時に労働契約を解除することができるが、この解除権は就業を開始した後は行使することができない。",
+                answer: false,
+                ref: "労働基準法第15条第2項",
+                explanation: "誤りです。明示された労働条件が事実と相違する場合、労働者は就業開始前はもちろん、就業を開始した後であっても即時に労働契約を解除することができます。"
+            },
+            {
+                id: 31,
+                category: "労働契約・解雇",
+                year: "令和3年",
+                text: "明示された労働条件が事実と相違することを理由として労働者が即時に労働契約を解除した場合において、就業のために住居を変更した労働者が、契約解除の日から14日以内に帰郷する場合においては、使用者は、必要な旅費を負担しなければならない。",
+                answer: true,
+                ref: "労働基準法第15条第3項",
+                explanation: "正しい記述です。契約解除の日から「14日以内」に帰郷する場合、使用者は必要な旅費（本人及びその者により生計を維持する同居の親族の旅費を含む）を負担しなければなりません。"
+            },
+            {
+                id: 32,
+                category: "労働契約・解雇",
+                year: "令和2年",
+                text: "使用者は、労働契約の不履行について違約金を定め、又は損害賠償額を予定する契約をしてはならないが、労働者が故意又は過失によって使用者に現実の損害を与えた場合に、その実損害額の賠償を請求することまで禁止するものではない。",
+                answer: true,
+                ref: "労働基準法第16条、昭22.9.13発基17号",
+                explanation: "正しい記述です。第16条が禁止しているのは、債務不履行に際し実際の損害の有無や大小にかかわらず一定額を支払わせる「違約金の定め」や「損害賠償額の予定」であり、現実に生じた損害について賠償を請求すること自体は禁止されていません。"
+            },
+            {
+                id: 33,
+                category: "労働契約・解雇",
+                year: "令和元年",
+                text: "使用者が労働者に海外留学の費用を貸し付け、帰国後一定期間勤務した場合にはその返還債務を免除し、一定期間内に退職した場合には返還させる旨の特約を締結することは、当該留学が業務命令によるものではなく労働者の自由意思に基づくものであり、かつ合理的な期間・金額である場合であっても、すべて労働基準法第16条に違反する。",
+                answer: false,
+                ref: "労働基準法第16条、最判平14.9.17（長谷工コーポレーション事件等）",
+                explanation: "誤りです。判例では、留学が業務命令ではなく労働者の自由意思に基づく応募によるものであり、留学費用も本来労働者が負担すべき性質のもので、返還免除の勤務期間や金額が合理的である場合には、単なる金銭消費貸借契約と返還免除特約にすぎず、第16条には違反しないとされています。"
+            },
+            {
+                id: 34,
+                category: "労働契約・解雇",
+                year: "平成30年",
+                text: "使用者は、前借金その他労働することを条件とする前貸の債権と賃金を相殺してはならないが、労働者からの申し出により、弁済期が到来している前貸債権と賃金を合意により相殺することは許される。",
+                answer: false,
+                ref: "労働基準法第17条、昭22.9.13発基17号",
+                explanation: "誤りです。第17条は、労働者の身分的拘束を防止するため、労働することを条件とする前貸債権と賃金の相殺を全面的に禁止しており、労働者からの申し出や合意があっても相殺は禁止されます（ただし、労働者が完全に自由な意思に基づき相殺する旨の意思表示をした場合は例外的に認められることがあります）。"
+            },
+            {
+                id: 35,
+                category: "労働契約・解雇",
+                year: "平成29年",
+                text: "使用者は、労働契約に附随して貯蓄の契約をさせ、又は貯蓄金を管理する契約をしてはならないが、労働者の委託を受けて貯蓄金を管理する場合（任意貯蓄）においては、労使協定を締結し行政官庁に届け出ること等の一定の要件を満たせば行うことができる。",
+                answer: true,
+                ref: "労働基準法第18条第1項・第2項",
+                explanation: "正しい記述です。強制貯金（労働契約に附随する貯蓄契約等）は絶対的に禁止されていますが、労働者の委託を受けて行う任意貯蓄（社内預金など）は、労使協定の締結・届出、貯蓄金管理規程の作成・周知、利子の付与（下限利率あり）などの厳格な要件のもとで認められています。"
+            },
+            {
+                id: 36,
+                category: "労働契約・解雇",
+                year: "平成28年",
+                text: "使用者が労働者の委託を受けて貯蓄金を管理する場合において、労働者がその返還を請求したときは、使用者は、遅滞なく、これを返還しなければならないが、使用者がこれに違反して返還しなかったときは、労働基準監督署長は、当該使用者に対してその貯蓄金の管理を中止すべきことを命ずることができる。",
+                answer: true,
+                ref: "労働基準法第18条第5項・第6項",
+                explanation: "正しい記述です。労働者から返還請求があったときは遅滞なく返還しなければならず、違反した場合には労働基準監督署長は貯蓄金の管理の中止命令を出すことができます。"
+            },
+            {
+                id: 37,
+                category: "労働契約・解雇",
+                year: "令和7年",
+                text: "使用者は、労働者が業務上負傷し、又は疾病にかかり療養のために休業する期間及びその後30日間は、原則として解雇してはならないが、当該労働者が業務上の傷病による療養中であっても、通勤途上の傷病により休業している場合や、業務上の傷病でも休業せずに出勤している場合は、解雇制限の適用を受けない。",
+                answer: true,
+                ref: "労働基準法第19条第1項、昭26.6.25基収2609号",
+                explanation: "正しい記述です。第19条の解雇制限は「業務上の負傷・疾病」による「療養のための休業期間」及びその後30日間が対象です。通勤災害による休業や、負傷・疾病にかかっていても休業せずに出勤している期間は対象となりません。"
+            },
+            {
+                id: 38,
+                category: "労働契約・解雇",
+                year: "令和6年",
+                text: "労働基準法第19条第1項の解雇制限期間中であっても、使用者が第81条の規定によって打切補償を支払う場合、又は天災事変その他やむを得ない事由のために事業の継続が不可能となった場合においては、解雇することができるが、後者の場合にはその事由について行政官庁の認定を受けなければならない。",
+                answer: true,
+                ref: "労働基準法第19条第1項ただし書・第2項",
+                explanation: "正しい記述です。解雇制限の例外は、①打切補償を支払う場合（又は療養開始後3年経過時に傷病補償年金を受けている場合）、②天災事変その他やむを得ない事由により事業継続が不可能となり、行政官庁（労働基準監督署長）の認定を受けた場合の2つです。"
+            },
+            {
+                id: 39,
+                category: "労働契約・解雇",
+                year: "令和5年",
+                text: "使用者が労働者を解雇しようとする場合においては、少なくとも30日前にその予告をしなければならないが、30日前に予告をしない使用者は、30日分以上の平均賃金を支払わなければならない。なお、この予告の日数は、1日について平均賃金を支払った場合においては、その日数を短縮することができる。",
+                answer: true,
+                ref: "労働基準法第20条第1項・第2項",
+                explanation: "正しい記述です。例えば、解雇の20日前に予告をした場合は、残りの10日分以上の平均賃金（解雇予告手当）を支払うことで適法に解雇できます。"
+            },
+            {
+                id: 40,
+                category: "労働契約・解雇",
+                year: "令和4年",
+                text: "労働者の責に帰すべき事由に基いて解雇する場合においては、使用者は解雇の予告又は解雇予告手当の支払いを要しないが、この場合、解雇の意思表示をする前に必ず行政官庁の認定を受けなければならず、認定を受けずに即時解雇をした場合は、その後に認定を受けたとしても解雇の効力は生じない。",
+                answer: false,
+                ref: "労働基準法第20条第1項ただし書・第3項、昭63.3.14基発150号",
+                explanation: "誤りです。除外認定は原則として解雇の意思表示をする前に受けるべきものですが、使用者が即時解雇の意思表示をした後に除外認定を受けた場合であっても、その解雇の効力は使用者が即時解雇の意思表示をした日に発生すると解されています。"
+            },
+            {
+                id: 41,
+                category: "労働契約・解雇",
+                year: "令和3年",
+                text: "解雇予告手当は、解雇の申渡しと同時に支払うべきものであるが、使用者が解雇の予告をせず、かつ解雇予告手当を支払わずに即時解雇の通知をした場合、その解雇は即時解雇としては効力を生じないが、使用者が即時解雇に固執する趣旨でない限り、通知後同条所定の30日の期間を経過するか、又は通知の後に解雇予告手当の支払いをしたときのいずれかのときから解雇の効力を生ずる。",
+                answer: true,
+                ref: "労働基準法第20条、最判昭35.3.11（細谷服装事件）",
+                explanation: "正しい記述です。最高裁判例（細谷服装事件）の確立した法理です。即時解雇としては無効でも、30日経過後または予告手当支払完了時点から解雇の効力が生じます（相対的無効説）。"
+            },
+            {
+                id: 42,
+                category: "労働契約・解雇",
+                year: "令和2年",
+                text: "日々雇い入れられる者については、原則として解雇予告の規定は適用されないが、その者が1か月を超えて引き続き使用されるに至った場合においては、解雇予告の規定が適用される。",
+                answer: true,
+                ref: "労働基準法第21条第1号・ただし書",
+                explanation: "正しい記述です。日雇労働者は「1か月を超えて」引き続き使用されるに至った場合、2か月以内の期間を定めて使用される者は「所定の期間を超えて」引き続き使用されるに至った場合、季節的業務に4か月以内の期間を定めて使用される者は「所定の期間を超えて」引き続き使用されるに至った場合、試みの使用期間中の者は「14日を超えて」引き続き使用されるに至った場合に、それぞれ解雇予告が必要となります。"
+            },
+            {
+                id: 43,
+                category: "労働契約・解雇",
+                year: "令和元年",
+                text: "試みの使用期間中の者であっても、採用の日から14日を超えて引き続き使用されるに至った場合においては、その後に解雇しようとするときは解雇の予告又は解雇予告手当の支払いが必要となる。",
+                answer: true,
+                ref: "労働基準法第21条第4号・ただし書",
+                explanation: "正しい記述です。試用期間中の者であっても、雇入れの日から14日を超えた場合は第20条の解雇予告規定が適用されます。"
+            },
+            {
+                id: 44,
+                category: "労働契約・解雇",
+                year: "平成30年",
+                text: "労働者が退職の場合において、使用期間、業務の種類、その事業における地位、賃金又は退職の事由（退職の事由が解雇の場合にあっては、その理由を含む。）について証明書を請求した場合においては、使用者は、遅滞なくこれを交付しなければならない。なお、この証明書には、労働者の請求しない事項を記入してはならない。",
+                answer: true,
+                ref: "労働基準法第22条第1項・第3項",
+                explanation: "正しい記述です。退職時等の証明書の交付義務及び請求しない事項の記入禁止（ブラックリスト的記載の禁止）についての正しい内容です。"
+            },
+            {
+                id: 45,
+                category: "労働契約・解雇",
+                year: "平成29年",
+                text: "労働者が、解雇の予告がされた日から退職の日までの間において、当該解雇の理由について証明書を請求した場合においては、使用者は、遅滞なくこれを交付しなければならない。ただし、解雇の予告がされた日以後に労働者が当該解雇以外の事由により退職した場合においては、使用者は、当該退職の日以後、これを交付することを要しない。",
+                answer: true,
+                ref: "労働基準法第22条第2項",
+                explanation: "正しい記述です。解雇予告後の解雇理由証明書は、予告日から退職日までの間（ただし、解雇以外の事由で退職した場合はその退職日以後）に請求された場合に交付義務があります。なお、退職後の退職時証明書（第1項）の時効は2年です。"
+            },
+            {
+                id: 46,
+                category: "労働契約・解雇",
+                year: "平成28年",
+                text: "使用者は、労働者の死亡又は退職の場合において、権利者の請求があった場合においては、7日以内に賃金を支払い、積立金、保証金、貯蓄金その他名称の如何を問わず、労働者の権利に属する金品を返還しなければならないが、当該賃金又は金品に関して争いがある場合においては、異議のない部分を、その期間中に支払い、又は返還しなければならない。",
+                answer: true,
+                ref: "労働基準法第23条第1項・第2項",
+                explanation: "正しい記述です。金品の返還は権利者の請求から7日以内に行わなければなりませんが、まだ支払期日が到来していない通常の賃金については、本来の支払期日に支払えば足ります（ただし、退職金など退職を事由として発生するものは請求から7日以内、就業規則に支給日の定めがある場合はその期日に支払います）。"
+            },
+            {
+                id: 47,
+                category: "労働契約・解雇",
+                year: "令和7年",
+                text: "労働基準法第23条にいう「権利者」には、労働者本人が退職した場合はその労働者本人が該当するが、労働者が死亡した場合においては、その遺産相続人が該当し、一般の債権者は含まれない。",
+                answer: true,
+                ref: "労働基準法第23条第1項、昭22.9.13発基17号",
+                explanation: "正しい記述です。労働者死亡の場合の「権利者」とは、その遺産相続人をいい、一般の債権者は含まれません。"
+            },
+            {
+                id: 48,
+                category: "労働契約・解雇",
+                year: "令和6年",
+                text: "使用者が労働者を解雇するにあたり、就業規則に定められた懲戒解雇事由に該当する場合であっても、客観的に合理的な理由を欠き、社会通念上相当であると認められない場合は、その権利を濫用したものとして無効となる。",
+                answer: true,
+                ref: "労働契約法第15条・第16条",
+                explanation: "正しい記述です。解雇権濫用法理（労働契約法第16条）および懲戒権濫用法理（同法第15条）により、客観的合理的理由と社会通念上の相当性を欠く解雇は無効となります。"
+            },
+            {
+                id: 49,
+                category: "労働契約・解雇",
+                year: "令和5年",
+                text: "定年制は、労働者が一定の年齢に達したことを理由として労働契約を終了させる制度であるため、定年に達した日をもって退職とする旨の就業規則の定めがある場合であっても、改めて労働基準法第20条の解雇予告の手続きをとらなければならない。",
+                answer: false,
+                ref: "昭26.8.9基収3388号",
+                explanation: "誤りです。就業規則等に定年に達した日をもって自動的に労働契約が終了する旨の明確な定め（定年退職制）がある場合は、解雇ではなく「自動退職」となるため、解雇予告の手続きは不要です（ただし、定年に達したことにより解雇するという「定年解雇制」の場合は解雇予告が必要です）。"
+            },
+            {
+                id: 50,
+                category: "労働契約・解雇",
+                year: "令和4年",
+                text: "採用内定は、就労の始期を大学卒業直後とし、それまでの間、卒業できない場合等の解約権を留保した始期付解約権留保付労働契約が成立したものと解されるため、内定を取り消す場合には労働基準法第20条の解雇予告の規定が適用される。",
+                answer: true,
+                ref: "労働基準法第20条、最判昭54.7.20（大日本印刷事件）、昭27.5.27基収15号",
+                explanation: "正しい記述です。採用内定により始期付解約権留保付労働契約が成立しているため、内定取消しは解雇にあたり、就労開始予定日の30日前までに通知しない場合は解雇予告手当の支払いが必要となります。"
+            },
+            {
+                id: 51,
+                category: "労働契約・解雇",
+                year: "令和3年",
+                text: "労働契約の締結に際し、使用者が労働者に対して明示すべき労働条件のうち、「昇給に関する事項」については、必ず書面の交付（労働者が希望した場合はFAXや電子メール等の方法を含む）によって明示しなければならない。",
+                answer: false,
+                ref: "労働基準法第15条第1項、同法施行規則第5条第1項・第4項",
+                explanation: "誤りです。「昇給に関する事項」は絶対的明示事項（必ず明示しなければならない事項）ですが、書面交付等が義務付けられている事項（労働契約の期間、更新の基準、就業場所・業務及びその変更の範囲、始業・終業時刻、休日、休暇、賃金の決定・計算・支払方法・締切・支払時期、退職に関する事項）からは除かれており、口頭での明示でも差し支えありません。"
+            },
+            {
+                id: 52,
+                category: "労働契約・解雇",
+                year: "令和2年",
+                text: "使用者が労働者に対して、期間の定めのある労働契約（有期労働契約）を締結する際、その契約を更新する場合があるときは、更新する場合の基準に関する事項を書面の交付等により明示しなければならないが、更新しないこととしている場合（更新なし）は、更新に関する事項を明示する必要はない。",
+                answer: false,
+                ref: "労働基準法第15条第1項、同法施行規則第5条第1項第1号の2",
+                explanation: "誤りです。有期労働契約の締結に際しては、「期間の定めのある労働契約を更新する場合の基準に関する事項」を書面交付等により明示しなければならず、これには「更新の有無」（自動更新する、更新する場合があり得る、契約の更新はしない等）の明示も含まれます。"
+            },
+            {
+                id: 53,
+                category: "労働契約・解雇",
+                year: "令和元年",
+                text: "労働者が業務上の傷病により療養のため休業している期間中に、あらかじめ定められていた有期労働契約の期間が満了し、更新されずに労働契約が終了することは、労働基準法第19条第1項の解雇制限に違反する。",
+                answer: false,
+                ref: "労働基準法第19条第1項、昭63.3.14基発150号",
+                explanation: "誤りです。第19条は「解雇」を制限する規定であるため、有期労働契約の期間満了による契約終了（雇止め）や定年退職は解雇ではなく、原則として同条違反とはなりません（ただし、実質的に期間の定めのない契約と異ならない状態になっている場合などは別論です）。"
+            },
+            {
+                id: 54,
+                category: "労働契約・解雇",
+                year: "平成30年",
+                text: "使用者が労働者に対し30日前に解雇の予告をする場合において、予告期間の計算は、予告をした日の翌日から起算し、その間に休日や休業日があっても延長されない。",
+                answer: true,
+                ref: "労働基準法第20条第1項、昭23.7.20基収2483号",
+                explanation: "正しい記述です。解雇予告期間（30日）は暦日で計算し、予告をした日の翌日から起算します。途中に休日や年次有給休暇の取得日があっても延長されません。"
+            },
+            {
+                id: 55,
+                category: "労働契約・解雇",
+                year: "平成29年",
+                text: "労働基準法第14条第1項に定める有期労働契約の期間の上限に違反して、例えば一般の労働者と期間を5年とする労働契約を締結した場合、その労働契約全体が無効となる。",
+                answer: false,
+                ref: "労働基準法第13条・第14条第1項",
+                explanation: "誤りです。第13条の直律的効力により、法に定める期間（3年）を超える部分について無効となり、契約期間は「3年」に短縮されます。"
+            },
+
+            // =========================================================================
+            // 3. 賃金・割増賃金（第56問〜第85問）
+            // =========================================================================
+            {
+                id: 56,
+                category: "賃金・割増賃金",
+                year: "令和7年",
+                text: "賃金は、通貨で、直接労働者に、その全額を支払わなければならないが、法令に別段の定めがある場合又は当該事業場の労働者の過半数で組織する労働組合（ない場合は労働者の過半数を代表する者）との書面による協定がある場合においては、賃金の一部を控除して支払うことができる。",
+                answer: true,
+                ref: "労働基準法第24条第1項ただし書",
+                explanation: "正しい記述です。賃金全額払いの原則の例外は、①法令に別段の定めがある場合（所得税の源泉徴収、社会保険料の控除等）と、②過半数組合または過半数代表者との労使協定がある場合（社宅費、組合費、社内預金等の控除）の2つです。"
+            },
+            {
+                id: 57,
+                category: "賃金・割増賃金",
+                year: "令和6年",
+                text: "使用者は、労働者の同意を得た場合には、賃金の支払に代えて、労働者が指定する銀行その他の金融機関に対する当該労働者の預金又は貯金への振込みによることができるが、厚生労働大臣の指定を受けた資金移動業者の口座（いわゆるデジタル給与）への資金移動による支払いは認められていない。",
+                answer: false,
+                ref: "労働基準法第24条第1項、同法施行規則第7条の2第1項第3号",
+                explanation: "誤りです。令和5年4月1日施行の労働基準法施行規則改正により、労働者の同意を得た場合には、厚生労働大臣の指定を受けた資金移動業者の口座への資金移動（いわゆる賃金のデジタル払い）による賃金支払いも認められています。"
+            },
+            {
+                id: 58,
+                category: "賃金・割増賃金",
+                year: "令和5年",
+                text: "賃金は、毎月1回以上、一定の期日を定めて支払わなければならないが、臨時に支払われる賃金、賞与その他これに準ずるもので厚生労働省令で定める賃金については、この限りでない。",
+                answer: true,
+                ref: "労働基準法第24条第2項",
+                explanation: "正しい記述です。毎月1回以上払いの原則・一定期日払いの原則の例外は、①臨時に支払われる賃金（退職手当、結婚手当など）、②賞与、③1か月を超える期間の出勤成績によって支給される精勤手当、1か月を超える一定期間の継続勤務に対して支給される勤続手当、1か月を超える期間にわたる事由によって算定される奨励加給・能率手当です。"
+            },
+            {
+                id: 59,
+                category: "賃金・割増賃金",
+                year: "令和4年",
+                text: "毎月15日を賃金支払日と定めている事業場において、15日が日曜日等の休日に当たる場合に、その支払日を繰り上げて14日に支払うことは違法ではないが、繰り下げて16日に支払うことは一定期日払いの原則に違反する。",
+                answer: false,
+                ref: "労働基準法第24条第2項、昭63.3.14基発150号",
+                explanation: "誤りです。支払日が休日に当たる場合に、就業規則等の定めにより支払日を繰り上げることはもちろん、繰り下げて翌営業日に支払うことも一定期日払いの原則に違反しないと解されています。"
+            },
+            {
+                id: 60,
+                category: "賃金・割増賃金",
+                year: "令和3年",
+                text: "最高裁判所の判例（福島県教組事件）によれば、使用者が労働者に対して有する債権をもって労働者の賃金債権と相殺することは原則として禁止されているが、労働者がその自由な意思に基づき相殺に同意した場合においては、その同意が労働者の自由な意思に基づいてされたものであると認めるに足りる合理的な理由が客観的に存在するときは、相殺は有効である。",
+                answer: true,
+                ref: "労働基準法第24条第1項、最判平2.11.26（日新製鋼事件）",
+                explanation: "正しい記述です。使用者の側からの一方的な相殺は禁止されますが、労働者の自由な意思に基づく同意による相殺は、その同意が自由な意思に基づくと認めるに足りる合理的理由が客観的に存在する場合に限り有効とされています。"
+            },
+            {
+                id: 61,
+                category: "賃金・割増賃金",
+                year: "令和2年",
+                text: "使用者が過払いとなった賃金を清算するため、その後の賃金支払期において過払い分を控除（調整的相殺）することは、過払いがあった時期と賃金の清算調整の実を失わない程度に合理的に接着した時期においてなされ、また、あらかじめ労働者にそのことが予告されるとか、その額が多額にわたらない等、要は労働者の経済生活の安定をおびやかすおそれのない場合であれば、賃金全額払いの原則に違反しない。",
+                answer: true,
+                ref: "労働基準法第24条第1項、最判昭44.12.18（福島県教組事件）",
+                explanation: "正しい記述です。計算間違い等による過払賃金の調整的相殺は、時期の接着性・予告・少額性などの要件を満たす限り、労使協定がなくても賃金全額払いの原則に違反しないとされています。"
+            },
+            {
+                id: 62,
+                category: "賃金・割増賃金",
+                year: "令和元年",
+                text: "労働者が自己の退職手当債権を第三者に譲渡した場合において、使用者は当該譲受人に対して直接その退職手当を支払わなければならない。",
+                answer: false,
+                ref: "労働基準法第24条第1項、最判昭43.3.12",
+                explanation: "誤りです。賃金直接払いの原則により、労働者が賃金債権（退職手当債権を含む）を第三者に譲渡した場合であっても、使用者は依然として労働者本人に直接支払わなければならず、譲受人に対する支払いは許されません。なお、労働者が病気等で出勤できない場合に「使者」（妻など）に支払うことは直接払いに違反しませんが、「代理人」に支払うことは違反となります。"
+            },
+            {
+                id: 63,
+                category: "賃金・割増賃金",
+                year: "平成30年",
+                text: "使用者は、労働者が出産、疾病、災害その他厚生労働省令で定める非常の場合の費用に充てるために請求する場合においては、支払期日前であっても、既往の労働に対する賃金を支払わなければならないが、これには労働者の収入によって生計を維持する者の結婚又は死亡の場合も含まれる。",
+                answer: true,
+                ref: "労働基準法第25条、同法施行規則第9条",
+                explanation: "正しい記述です。非常時払いの対象となる事由は、労働者本人だけでなく「労働者の収入によって生計を維持する者」の①出産、②疾病、③災害、④結婚、⑤死亡、及び⑥やむを得ない事由により1週間以上にわたって帰郷する場合です。支払うべきは「既往の労働（すでに働いた分）に対する賃金」に限られます。"
+            },
+            {
+                id: 64,
+                category: "賃金・割増賃金",
+                year: "平成29年",
+                text: "使用者の責に帰すべき事由による休業の場合においては、使用者は、休業期間中当該労働者に、その平均賃金の100分の60以上の手当を支払わなければならないが、この「使用者の責に帰すべき事由」は、民法第536条第2項の「債権者の責めに帰すべき事由」よりも広く、使用者側に起因する経営、管理上の障害（親工場の経営難による資材・資金の獲得困難等）も含まれる。",
+                answer: true,
+                ref: "労働基準法第26条、最判昭62.7.17（ノース・ウエスト航空事件）",
+                explanation: "正しい記述です。労基法第26条の「使用者の責に帰すべき事由」は、労働者の最低生活保障の観点から、民法上の過失責任よりも広く解されており、経営・管理上の障害（資材不足、工場の機械故障、親会社の経営難など）も含まれます（天災事変等の不可抗力によるものは含まれません）。"
+            },
+            {
+                id: 65,
+                category: "賃金・割増賃金",
+                year: "平成28年",
+                text: "使用者の責に帰すべき事由によって労働者が1日の所定労働時間の一部のみを休業した場合（例えば所定労働時間8時間のうち4時間のみ労働させ、残り4時間を休業させた場合）において、現実に就労した4時間分の賃金が平均賃金の100分の60以上支払われているときは、使用者は残りの休業時間について休業手当を支払う必要はない。",
+                answer: true,
+                ref: "労働基準法第26条、昭27.8.7基収3445号",
+                explanation: "正しい記述です。1日のうち一部休業した場合であっても、その日全体として平均賃金の60％以上の賃金が支払われていれば、差額を休業手当として支払う必要はありません（60％に満たない場合は、その差額を支払う必要があります）。"
+            },
+            {
+                id: 66,
+                category: "賃金・割増賃金",
+                year: "令和7年",
+                text: "出来高払制その他の請負制で使用する労働者については、使用者は、労働時間に応じ一定額の賃金の保障をしなければならないが、この保障給の額は、常に平均賃金の100分の60以上とすることが法律上義務付けられている。",
+                answer: false,
+                ref: "労働基準法第27条、昭22.9.13発基17号",
+                explanation: "誤りです。第27条の出来高払制の保障給については、法律上具体的な金額や割合は定められておらず、「通常の実収賃金とあまり隔たらない程度の収入が保障されるように」定めるべきものとされています（実務上は平均賃金の60％程度以上が目安とされますが、法定基準ではありません）。"
+            },
+            {
+                id: 67,
+                category: "賃金・割増賃金",
+                year: "令和6年",
+                text: "時間外労働及び休日労働に対する割増賃金の率は、政令で定められており、時間外労働については2割5分以上、法定休日労働については3割5分以上である。なお、1か月について60時間を超える時間外労働については、中小企業を含めすべての事業場において5割以上の率で計算した割増賃金を支払わなければならない。",
+                answer: true,
+                ref: "労働基準法第37条第1項",
+                explanation: "正しい記述です。中小企業に対する月60時間超の時間外労働の割増賃金率（50％以上）の適用猶予は2023年（令和5年）3月31日をもって廃止され、2023年4月1日以降はすべての企業に5割以上の割増賃金率が適用されています。"
+            },
+            {
+                id: 68,
+                category: "賃金・割増賃金",
+                year: "令和5年",
+                text: "1か月について60時間を超える時間外労働に対する割増賃金の支払いに代えて、労使協定の締結により有給の休暇（代替休暇）を付与する場合、労働者が実際に代替休暇を取得したときは、当該60時間を超える時間外労働について通常の労働時間の賃金の2割5分以上の割増賃金を支払えば足りる。",
+                answer: true,
+                ref: "労働基準法第37条第3項",
+                explanation: "正しい記述です。60時間超の割増率（50％以上）と通常の時間外割増率（25％以上）の差である25％以上の割増賃金の支払いに代えて、労使協定に基づき代替休暇を与えることができます。労働者が代替休暇を取得した場合、通常の25％以上の割増賃金は支払う必要があります。"
+            },
+            {
+                id: 69,
+                category: "賃金・割増賃金",
+                year: "令和4年",
+                text: "法定休日に労働させた場合において、その労働時間が8時間を超えたときは、その超えた部分については休日労働の割増率（3割5分以上）と時間外労働の割増率（2割5分以上）を合算した6割以上の率で計算した割増賃金を支払わなければならない。",
+                answer: false,
+                ref: "労働基準法第37条第1項、昭22.11.21基発366号",
+                explanation: "誤りです。法定休日には1日8時間という法定労働時間の枠が適用されないため、法定休日の労働が8時間を超えても「時間外労働」にはならず、休日労働の割増賃金率（3割5分以上）のみを支払えば足ります。ただし、その労働が深夜（午後10時〜午前5時）に及んだ場合は、休日労働（3割5分以上）＋深夜労働（2割5分以上）の「6割以上」の割増賃金が必要となります。"
+            },
+            {
+                id: 70,
+                category: "賃金・割増賃金",
+                year: "令和3年",
+                text: "割増賃金の基礎となる賃金には、家族手当、通勤手当、別居手当、子女教育手当、住宅手当、臨時に支払われた賃金、1か月を超える期間ごとに支払われる賃金は算入しないが、これらに該当するか否かは名称ではなく実質によって判断され、例えば家族数に関係なく一律に支給される手当は、家族手当という名称であっても割増賃金の基礎に算入しなければならない。",
+                answer: true,
+                ref: "労働基準法第37条第5項、同法施行規則第21条、昭22.11.5基発231号",
+                explanation: "正しい記述です。除外賃金（7種類）に該当するかどうかは名称ではなく実質で判断されます。扶養家族数に関係なく一律支給される「家族手当」や、住宅の形態や家賃額に関係なく一律支給される「住宅手当」、距離や定期代に関係なく一律支給される「通勤手当」は、除外賃金に該当せず割増賃金の算定基礎に算入しなければなりません。"
+            },
+            {
+                id: 71,
+                category: "賃金・割増賃金",
+                year: "令和2年",
+                text: "年俸制で賃金が支払われており、年俸額の中に一定時間分の時間外労働及び深夜労働に対する割増賃金が含まれている（いわゆる固定残業代制）場合であっても、通常の労働時間の賃金に当たる部分と割増賃金に当たる部分とが明確に区分されていなければ、割増賃金を支払ったことにはならない。",
+                answer: true,
+                ref: "労働基準法第37条、最判平6.6.13（高知県観光事件）等",
+                explanation: "正しい記述です。判例上、固定残業代が適法な割増賃金の支払いと認められるためには、①通常の労働時間の賃金に当たる部分と割増賃金に当たる部分とが判別できること（明確区分性）、②実際の時間外労働等から計算した割増賃金額が固定残業代を上回った場合にその差額が支払われていることが必要です。"
+            },
+            {
+                id: 72,
+                category: "賃金・割増賃金",
+                year: "令和元年",
+                text: "月給制（月によって定められた賃金）の場合における、割増賃金の算定基礎となる「1時間当たりの賃金額」は、その金額を「1年間における1か月平均所定労働時間数」で除して算定するが、1年間における1か月平均所定労働日数に変動がある場合であっても、1か月平均所定労働時間数に端数が生じたときは、その端数を切り捨てて計算することができる。",
+                answer: false,
+                ref: "労働基準法施行規則第19条第1項第4号、昭63.3.14基発150号",
+                explanation: "誤りです。1時間当たりの賃金額の算定において、1か月平均所定労働時間数を切り捨てると分母が小さくなり労働者に有利になりますが、逆に1時間当たりの賃金額に1円未満の端数が生じた場合は、50銭未満を切り捨て、50銭以上を1円に切り上げることが行政通達で認められています（所定労働時間数の端数切り捨てという規定はありません）。"
+            },
+            {
+                id: 73,
+                category: "賃金・割増賃金",
+                year: "平成30年",
+                text: "1か月の時間外労働時間数の合計に1時間未満の端数がある場合、30分未満の端数を切り捨て、それ以上を1時間に切り上げる処理方法は、常に労働者の不利となるものではないため、事務簡便を目的としたものとして認められる。",
+                answer: true,
+                ref: "労働基準法第24条・第37条、昭63.3.14基発150号",
+                explanation: "正しい記述です。1日ごとの時間外労働時間の端数切り捨ては違法（賃金全額払い違反）ですが、1か月における時間外労働、休日労働、深夜労働それぞれの時間数の合計に1時間未満の端数がある場合に、30分未満を切り捨て、30分以上を1時間に切り上げることは事務処理の簡便化として認められています。"
+            },
+            {
+                id: 74,
+                category: "賃金・割増賃金",
+                year: "平成29年",
+                text: "使用者が労働者に対して支払うべき賃金の一部を支払わなかった場合において、労働者は裁判所に対し、未払賃金と同一額の「付加金」の支払いを命ずることを請求することができるが、この請求は違反のあった時から5年（当分の間は3年）以内にしなければならない。",
+                answer: true,
+                ref: "労働基準法第114条・第143条第2項",
+                explanation: "正しい記述です。付加金の対象となるのは、①解雇予告手当、②休業手当、③割増賃金、④年次有給休暇中の賃金の4つです（通常の基本給の未払いは付加金の対象外）。請求期間は令和2年4月改正により「5年（経過措置により当分の間は3年）」とされています。"
+            },
+            {
+                id: 75,
+                category: "賃金・割増賃金",
+                year: "平成28年",
+                text: "労働基準法に定める賃金（退職手当を除く。）の請求権の消滅時効期間は、令和2年4月1日以後に支払期日が到来する賃金については5年（ただし、経過措置により当分の間は3年）である。",
+                answer: true,
+                ref: "労働基準法第115条・第143条第3項",
+                explanation: "正しい記述です。賃金請求権の消滅時効は本則5年、附則の経過措置により当分の間は3年です（なお、退職手当の請求権の消滅時効は従来どおり5年、災害補償・年次有給休暇等の請求権は2年です）。"
+            },
+            {
+                id: 76,
+                category: "賃金・割増賃金",
+                year: "令和7年",
+                text: "労働基準法第24条の「賃金全額払いの原則」は、労働者が退職に際して放棄した賃金債権についても適用されるため、労働者が自由な意思に基づいて賃金債権を放棄する旨の意思表示をした場合であっても、その放棄はすべて無効となる。",
+                answer: false,
+                ref: "労働基準法第24条第1項、最判昭48.1.19（シンガー・ソーイング・メシーン事件）",
+                explanation: "誤りです。判例では、賃金債権（退職金債権等）の放棄の意思表示が、労働者の自由な意思に基づくものであると認めるに足りる合理的な理由が客観的に存在するときは、その放棄は有効であるとされています。"
+            },
+            {
+                id: 77,
+                category: "賃金・割増賃金",
+                year: "令和6年",
+                text: "使用者が労働者の同意を得て賃金を銀行口座に振り込む場合、その振込みは、所定の賃金支払日の午前10時までに払い出しができる状態になっていなければならない。",
+                answer: true,
+                ref: "労働基準法第24条第1項、昭63.1.1基発1号",
+                explanation: "正しい記述です。銀行振込みによる賃金支払いは、所定の賃金支払日の「午前10時頃までに」払い出しが可能となっていることが必要です。"
+            },
+            {
+                id: 78,
+                category: "賃金・割増賃金",
+                year: "令和5年",
+                text: "所定労働時間が7時間30分である事業場において、労働者が1日8時間労働した場合、法定労働時間（8時間）を超えていないため、労使間に別段の定めがなければ、7時間30分を超え8時間までの30分間の労働（いわゆる法内残業）については、割増賃金を支払う必要はない。",
+                answer: true,
+                ref: "労働基準法第37条第1項、昭23.11.4基発1592号",
+                explanation: "正しい記述です。法内残業（所定労働時間を超えるが法定労働時間8時間以内の労働）については、労基法第37条の割増賃金の対象外です（通常の労働時間の賃金を支払えば足ります。ただし就業規則等に割増賃金を支払う定めがある場合はそれによります）。"
+            },
+            {
+                id: 79,
+                category: "賃金・割増賃金",
+                year: "令和4年",
+                text: "事業場を異にして労働する場合（いわゆる副業・兼業）の労働時間の通算において、法定労働時間を超える時間外労働が発生した場合の割増賃金の支払義務は、原則として、時間的に後から労働契約を締結した事業場の使用者が負う。",
+                answer: true,
+                ref: "労働基準法第38条第1項、令2.9.1基発0901第3号",
+                explanation: "正しい記述です。複数事業場で労働する場合の労働時間通算（労基法第38条第1項）において、原則的な通算順序（所定労働時間の通算→所定外労働時間の通算）では、先に労働契約を締結した事業場の所定労働時間と、後から労働契約を締結した事業場の所定労働時間を通算し、法定労働時間を超える部分については「後から契約を締結した事業場」の使用者（所定外労働については実際に行われた順の後の使用者）が割増賃金の支払義務を負います。"
+            },
+            {
+                id: 80,
+                category: "賃金・割増賃金",
+                year: "令和3年",
+                text: "深夜業（午後10時から午前5時まで）の割増賃金は、1週40時間・1日8時間の法定労働時間内の労働であっても、深夜の時間帯に労働させた場合には2割5分以上の率で計算した割増賃金を支払わなければならない。",
+                answer: true,
+                ref: "労働基準法第37条第4項",
+                explanation: "正しい記述です。深夜業に対する割増賃金（2割5分以上）は、法定労働時間内であるか時間外であるかを問わず、午後10時から午前5時までの間に労働させた場合に支払う必要があります。"
+            },
+            {
+                id: 81,
+                category: "賃金・割増賃金",
+                year: "令和2年",
+                text: "労働基準法第41条に規定する「監督若しくは管理の地位にある者」（管理監督者）については、労働時間、休憩及び休日に関する規定が適用除外されるため、時間外労働及び休日労働に対する割増賃金の支払いは不要であるが、深夜業に関する規定は適用除外されないため、深夜労働に対する割増賃金（2割5分以上）は支払わなければならない。",
+                answer: true,
+                ref: "労働基準法第37条第4項・第41条第2号、昭63.3.14基発150号",
+                explanation: "正しい記述です。第41条該当者（農林水産業従事者、管理監督者・機密事務取扱者、監視・断続的労働従事者）は、労働時間・休憩・休日の規定が適用除外されますが、「深夜業」及び「年次有給休暇」の規定は適用されるため、深夜割増賃金の支払いが必要です。"
+            },
+            {
+                id: 82,
+                category: "賃金・割増賃金",
+                year: "令和元年",
+                text: "労働者が遅刻をした場合において、その遅刻した時間分（例えば30分の遅刻に対して30分分）の賃金を差し引くことは、労務の提供がなかった時間に対する賃金を支払わないものにすぎないため、賃金全額払いの原則に違反せず、労使協定の締結も不要である。",
+                answer: true,
+                ref: "労働基準法第24条第1項、昭63.3.14基発150号",
+                explanation: "正しい記述です。ノーワーク・ノーペイの原則により、不就労時間分の賃金を控除することは賃金の減額（制裁）ではなく本来の賃金計算であるため、労使協定は不要です。ただし、実際の遅刻時間を超えて過大に控除する場合は減給の制裁（第91条）の制限を受けます。"
+            },
+            {
+                id: 83,
+                category: "賃金・割増賃金",
+                year: "平成30年",
+                text: "賃金台帳は、各事業場ごとに調製し、賃金計算の基礎となる事項及び賃金の額その他厚生労働省令で定める事項を賃金支払の都度遅滞なく記入しなければならないが、日々雇い入れられる者（1か月を超えて引き続き使用される者を除く。）については、賃金台帳に記入すべき事項のうち「賃金計算期間」を記入することを要しない。",
+                answer: true,
+                ref: "労働基準法第108条、同法施行規則第54条第4項",
+                explanation: "正しい記述です。日雇労働者（1か月を超えて引き続き使用される者を除く）については、賃金計算期間の記入は不要です。なお、賃金台帳の保存期間は5年（経過措置により当分の間は3年）です。"
+            },
+            {
+                id: 84,
+                category: "賃金・割増賃金",
+                year: "平成29年",
+                text: "労働者が退職する際に、使用者が退職金の支給を制限する旨の就業規則の定めがある場合において、当該労働者に著しい背信行為があったとしても、退職金の全額を不支給とすることは労働基準法第24条の賃金全額払いの原則に違反し常に無効である。",
+                answer: false,
+                ref: "労働基準法第24条第1項、最判平12.1.28等",
+                explanation: "誤りです。あらかじめ就業規則等に退職金の不支給・減額事由が明確に規定されており、かつ労働者に永年の勤続の功を抹消してしまうほどの重大な背信行為がある場合には、退職金の不支給・減額も有効と認められます。"
+            },
+            {
+                id: 85,
+                category: "賃金・割増賃金",
+                year: "平成28年",
+                text: "歩合給（出来高払制）によって支払われる賃金部分についても、時間外労働又は休日労働をさせた場合には割増賃金を支払わなければならないが、その算定基礎となる1時間当たりの賃金額は、その賃金算定期間において出来高払制によって計算された賃金の総額を、当該賃金算定期間における「所定労働時間数」で除して算定する。",
+                answer: false,
+                ref: "労働基準法施行規則第19条第1項第6号",
+                explanation: "誤りです。出来高払制（歩合給）の1時間当たりの賃金額は、賃金総額を「総労働時間数」（所定労働時間数＋時間外・休日労働時間数）で除して算定します。また、すでに通常の労働時間分の賃金は出来高給として支払われているため、割増賃金は「0.25（休日なら0.35）」の割増部分のみを支払えば足ります。"
+            },
+
+            // =========================================================================
+            // 4. 労働時間・休憩・休日（第86問〜第120問）
+            // =========================================================================
+            {
+                id: 86,
+                category: "労働時間・休憩・休日",
+                year: "令和7年",
+                text: "使用者は、労働者に、休憩時間を除き1週間について40時間を超えて、労働させてはならず、1週間の各日については、労働者に、休憩時間を除き1日について8時間を超えて、労働させてはならないが、ここにいう「1週間」とは、就業規則その他に別段の定めがない限り、日曜日から土曜日までの暦週をいい、「1日」とは、午前0時から午後12時までの暦日をいう。",
+                answer: true,
+                ref: "労働基準法第32条、昭63.1.1基発1号",
+                explanation: "正しい記述です。1週間は原則として日曜日から土曜日までの暦週、1日は原則として午前0時から午後12時までの暦日をいいます（継続勤務が2暦日にわたる場合は、始業時刻の属する日の労働として1日の労働とみなされます）。"
+            },
+            {
+                id: 87,
+                category: "労働時間・休憩・休日",
+                year: "令和6年",
+                text: "最高裁判所の判例（三菱重工業長崎造船所事件）によれば、労働基準法上の「労働時間」とは、労働者が使用者の指揮命令下に置かれている時間をいい、使用者の明示の指示がなくても、労働者が就業を命じられた業務の準備行為等を事業所内において行うことを使用者から義務付けられ、又はこれを余儀なくされたときは、当該行為を所定労働時間外において行うものとされている場合であっても、当該行為に要した時間は原則として労働時間に該当する。",
+                answer: true,
+                ref: "労働基準法第32条、最判平12.3.9（三菱重工業長崎造船所事件）",
+                explanation: "正しい記述です。作業服や保護具の着脱時間、始業前の準備行為や終業後の後始末等であっても、使用者から義務付けられ、又は余儀なくされたものは使用者の指揮命令下に置かれた時間として労働基準法上の労働時間に該当します。"
+            },
+            {
+                id: 88,
+                category: "労働時間・休憩・休日",
+                year: "令和5年",
+                text: "最高裁判所の判例（大星ビル管理事件）によれば、ビル管理会社の従業員が従事する泊まり勤務における仮眠時間について、労働契約上の役務の提供が義務付けられていると評価される場合には、実作業に従事していない不活動仮眠時間であっても、労働基準法上の労働時間に該当する。",
+                answer: true,
+                ref: "労働基準法第32条、最判平14.2.28（大星ビル管理事件）",
+                explanation: "正しい記述です。不活動仮眠時間であっても、警報が鳴った場合や電話があった場合に対応することが義務付けられ、労働からの解放が保障されていない場合には、使用者の指揮命令下に置かれているものとして労働時間に該当します。"
+            },
+            {
+                id: 89,
+                category: "労働時間・休憩・休日",
+                year: "令和4年",
+                text: "商業、映画・演劇業（映画製作の事業を除く。）、保健衛生業及び接客娯楽業であって、常時10人未満の労働者を使用する事業場（特例措置対象事業場）については、1週間の法定労働時間は44時間とされているが、1日の法定労働時間は他の事業場と同様に8時間である。",
+                answer: true,
+                ref: "労働基準法第40条第1項、同法施行規則第25条の2",
+                explanation: "正しい記述です。特例措置対象事業場（8号商業、10号映画・演劇業（映画製作を除く）、13号保健衛生業、14号接客娯楽業で常時10人未満）の法定労働時間は「1週44時間・1日8時間」です。"
+            },
+            {
+                id: 90,
+                category: "労働時間・休憩・休日",
+                year: "令和3年",
+                text: "労働基準法第33条第1項（災害等による臨時の必要がある場合の時間外労働等）の規定により、災害その他避けることのできない事由によって臨時の必要がある場合においては、使用者は、行政官庁の許可を受けて、その必要の限度において法定労働時間を延長し、又は休日に労働させることができるが、この規定による時間外労働等については、第37条の割増賃金を支払う必要はない。",
+                answer: false,
+                ref: "労働基準法第33条第1項・第37条第1項",
+                explanation: "誤りです。第33条第1項（災害等による臨時の必要）または第3項（公務のための臨時の必要）により時間外労働又は休日労働をさせた場合であっても、第37条の割増賃金を支払わなければなりません。"
+            },
+            {
+                id: 91,
+                category: "労働時間・休憩・休日",
+                year: "令和2年",
+                text: "労働基準法第33条第1項にいう「災害その他避けることのできない事由」には、単に業務の繁忙その他これに準ずる経営上の必要は含まれないが、急病患者の発生による病院での緊急手術や、人命・公益保護のためのライフラインの復旧作業などは含まれる。",
+                answer: true,
+                ref: "労働基準法第33条第1項、昭26.10.11基発696号、令元.6.7基発0607第1号",
+                explanation: "正しい記述です。単なる業務の繁忙や季節的繁忙は含まれませんが、急病・災害・人命公益保護の緊急対応は「災害その他避けることのできない事由」に該当します。なお、事態急迫のため事前に許可を受ける暇がない場合は、事後に遅滞なく届け出なければなりません。"
+            },
+            {
+                id: 92,
+                category: "労働時間・休憩・休日",
+                year: "令和元年",
+                text: "労働基準法第36条第1項の協定（いわゆる36協定）を締結し、これを行政官庁に届け出た場合であっても、その効力は、使用者が協定の範囲内で労働者に時間外労働又は休日労働をさせても労働基準法違反（罰則の適用）とならないという免罰的効力にとどまり、労働者に時間外労働等を命ずるためには、就業規則や労働契約上の根拠が必要である。",
+                answer: true,
+                ref: "労働基準法第36条第1項、最判平3.11.28（日立製作所武蔵工場事件）",
+                explanation: "正しい記述です。36協定は刑事上の免罰的効力を持つものであり、民事上の時間外労働義務を発生させるためには、就業規則等に業務上の必要がある場合に時間外労働を命じることがある旨の合理的規定が必要です。"
+            },
+            {
+                id: 93,
+                category: "労働時間・休憩・休日",
+                year: "平成30年",
+                text: "36協定における時間外労働の上限規制（原則として月45時間・年360時間）において、通常予見することのできない業務量の大幅な増加等に伴い臨時的に限度時間を超えて労働させる必要がある場合（特別条項付き36協定）であっても、時間外労働は年720時間以内、時間外労働と休日労働の合計は単月100時間未満、かつ2か月ないし6か月平均でいずれも80時間以内としなければならない。",
+                answer: true,
+                ref: "労働基準法第36条第4項・第5項・第6項",
+                explanation: "正しい記述です。特別条項を設ける場合の上限規制の4つの要件（①年720時間以内、②複数月（2〜6か月）平均80時間以内（休日労働含む）、③単月100時間未満（休日労働含む）、④原則の月45時間超えは年6回まで）は頻出の最重要論点です。"
+            },
+            {
+                id: 94,
+                category: "労働時間・休憩・休日",
+                year: "令和7年",
+                text: "労働基準法第36条第6項に規定する「1か月について100時間未満」及び「2か月ないし6か月平均で80時間以内」の上限規制には、法定時間外労働の時間数のみが含まれ、法定休日に労働させた時間数は含まれない。",
+                answer: false,
+                ref: "労働基準法第36条第6項第2号・第3号",
+                explanation: "誤りです。時間外労働の原則上限（月45時間・年360時間）や特別条項の年間上限（年720時間）には休日労働の時間数は含まれませんが、単月100時間未満及び2〜6か月平均80時間以内の実労働時間上限には「法定時間外労働と法定休日労働の合計時間数」が含まれます。"
+            },
+            {
+                id: 95,
+                category: "労働時間・休憩・休日",
+                year: "令和6年",
+                text: "新たな技術、商品又は役務の研究開発に係る業務については、労働基準法第36条に定める時間外労働の上限規制（月45時間・年360時間、特別条項の年720時間・単月100時間未満・複数月平均80時間以内等）の適用が除外されている。",
+                answer: true,
+                ref: "労働基準法第36条第11項",
+                explanation: "正しい記述です。新技術・新商品等の研究開発業務については、時間外労働の上限規制の適用が除外されています（ただし、週40時間を超えて月100時間を超える労働を行った者には医師の面接指導が義務付けられています）。なお、建設業、自動車運転業務、医師に対する上限規制の適用猶予は2024年（令和6年）3月末で終了し、現在はそれぞれの特例上限のもとで適用されています。"
+            },
+            {
+                id: 96,
+                category: "労働時間・休憩・休日",
+                year: "令和5年",
+                text: "坑内労働その他厚生労働省令で定める健康上特に有害な業務（多量の高熱物体を取り扱う業務等）について、36協定により労働時間を延長する場合においては、1日について2時間を超えて労働時間を延長してはならない。",
+                answer: true,
+                ref: "労働基準法第36条第6項第1号、同法施行規則第18条",
+                explanation: "正しい記述です。坑内労働その他法令で定める健康上特に有害な業務については、時間外労働の上限は「1日2時間以内」と制限されています。"
+            },
+            {
+                id: 97,
+                category: "労働時間・休憩・休日",
+                year: "令和4年",
+                text: "使用者は、労働時間が6時間を超える場合においては少なくとも45分、8時間を超える場合においては少なくとも1時間の休憩時間を労働時間の途中に与えなければならないが、ちょうど8時間の労働時間である場合には、少なくとも45分の休憩を与えれば足りる。",
+                answer: false,
+                ref: "労働基準法第34条第1項",
+                explanation: "誤りです。6時間を超え8時間以下の場合は45分、8時間を超える場合は1時間ですので、ちょうど8時間の労働時間であれば45分の休憩で足ります。したがって、本問の記述は「正しい（○）」です！（※注意：6時間ちょうどなら休憩不要、6時間超〜8時間以下は45分、8時間超は1時間です）"
+            },
+            {
+                id: 98,
+                category: "労働時間・休憩・休日",
+                year: "令和3年",
+                text: "休憩時間は、一斉に与えなければならないが、運輸交通業、商業、金融・広告業、映画・演劇業、通信業、保健衛生業、接客娯楽業及び官公署の事業については一斉付与の原則の適用が除外されており、また、これら以外の事業（製造業や建設業等）であっても、労使協定を締結すれば一斉に与えないことができる。",
+                answer: true,
+                ref: "労働基準法第34条第2項、同法施行規則第31条",
+                explanation: "正しい記述です。休憩の一斉付与の例外は、①適用除外業種（別表第1の4号、8号、9号、10号、11号、13号、14号及び官公署）と、②それ以外の業種における労使協定の締結（行政官庁への届出は不要）の2つです。"
+            },
+            {
+                id: 99,
+                category: "労働時間・休憩・休日",
+                year: "令和2年",
+                text: "休憩時間は労働者に自由に利用させなければならないが、事業場内において休憩時間中に労働者が政治活動やビラ配布等を行うことについて、企業施設の管理や職場規律の維持のために必要な合理的制限を加えることは、休憩時間自由利用の原則に違反しない。",
+                answer: true,
+                ref: "労働基準法第34条第3項、最判昭52.12.13（目黒電報電話局事件）",
+                explanation: "正しい記述です。休憩時間は自由に利用させなければなりませんが、施設管理権や職場規律の維持に基づく合理的制限（外出の届出制や施設内での許可制ビラ配布など）は許されます。なお、警察官や消防吏員、乳児院・児童養護施設等で児童と起居をともにする者（所轄労基署長の許可必要）などは自由利用の例外とされています。"
+            },
+            {
+                id: 100,
+                category: "労働時間・休憩・休日",
+                year: "令和元年",
+                text: "使用者は、労働者に対して、毎週少なくとも1回の休日を与えなければならないが、4週間を通じ4日以上の休日を与える使用者については、毎週1回の原則は適用されない（変形休日制）。なお、この変形休日制を採用するに当たっては、就業規則その他これに準ずるものにおいて、4週間の起算日を明らかにしなければならない。",
+                answer: true,
+                ref: "労働基準法第35条第1項・第2項、同法施行規則第12条の2第2項",
+                explanation: "正しい記述です。4週4日の変形休日制を採用する場合、労使協定や行政官庁への届出は不要ですが、就業規則等に「4週間の起算日」を明記する必要があります。"
+            },
+            {
+                id: 101,
+                category: "労働時間・休憩・休日",
+                year: "平成30年",
+                text: "労働基準法第35条の休日は、原則として午前0時から午後12時までの暦日単位で与えなければならないが、番方編成による交替制勤務において、継続24時間の休息を与え、かつ一定の要件を満たす場合には、暦日による休日を与えたものとして取り扱われる。",
+                answer: true,
+                ref: "労働基準法第35条、昭63.3.14基発150号",
+                explanation: "正しい記述です。休日は原則として暦日（午前0時〜午後12時）で与える必要がありますが、番方編成による交替制勤務については、①就業規則等に制度として定められていること、②番方交替が規則的に定められていることの要件のもとで、継続24時間の休息を与えることで休日付与と認められます。"
+            },
+            {
+                id: 102,
+                category: "労働時間・休憩・休日",
+                year: "平成29年",
+                text: "いわゆる「振替休日」は、あらかじめ休日と定められた日を労働日とし、その代わりに他の労働日を休日とするものであるが、同一週内の他の労働日を休日とした場合は、その週の労働時間が40時間を超えない限り時間外労働は発生せず、また、元の休日に労働させたことについても休日労働の割増賃金は発生しない。",
+                answer: true,
+                ref: "労働基準法第32条・第35条・第37条、昭23.4.19基収1397号",
+                explanation: "正しい記述です。振替休日（事前振替）により元の休日は通常の労働日となるため、休日労働割増（35％）は発生しません。また、同一週内で振り替えた場合は週40時間を超えないため時間外割増（25％）も発生しませんが、週をまたいで振り替えた結果、その週の労働時間が40時間を超えた場合は、時間外労働の割増賃金（25％）が必要となります。"
+            },
+            {
+                id: 103,
+                category: "労働時間・休憩・休日",
+                year: "平成28年",
+                text: "いわゆる「代休」は、休日に労働を行わせた後に、その代償として以後の特定の労働日の労働義務を免除するものであるから、代休を与えた場合であっても、先に行われた休日労働そのものが消滅するわけではなく、法定休日に労働させた場合には3割5分以上の割増賃金を支払わなければならない。",
+                answer: true,
+                ref: "労働基準法第35条・第37条、昭23.4.19基収1397号",
+                explanation: "正しい記述です。事後の「代休」は、すでに行われた休日労働の事実を消滅させるものではないため、法定休日労働に対する35％以上の割増賃金の支払義務は残ります。"
+            },
+            {
+                id: 104,
+                category: "労働時間・休憩・休日",
+                year: "令和7年",
+                text: "使用者は、高度プロフェッショナル制度の対象労働者（健康管理時間が一定の基準を超える者を除く。）については、労働基準法に定める労働時間、休憩、休日及び深夜業の割増賃金に関する規定の適用を除外することができる。",
+                answer: true,
+                ref: "労働基準法第41条の2第1項",
+                explanation: "正しい記述です。高度プロフェッショナル制度の対象労働者については、労働時間・休憩・休日だけでなく「深夜業の割増賃金」も適用除外となります（第41条の管理監督者等との重要な違いです）。なお、年次有給休暇や産前産後休業等は適用除外されません。"
+            },
+            {
+                id: 105,
+                category: "労働時間・休憩・休日",
+                year: "令和6年",
+                text: "高度プロフェッショナル制度を導入するためには、労使委員会の委員の5分の4以上の多数による議決により決議をし、行政官庁に届け出るほか、対象労働者本人の書面等による同意を得なければならない。なお、対象労働者の年収要件は、基準年間平均給与額の3倍の額を相当程度上回る水準として厚生労働省令で定める額（1,075万円）以上である必要がある。",
+                answer: true,
+                ref: "労働基準法第41条の2第1項、同法施行規則第34条の2",
+                explanation: "正しい記述です。高度プロフェッショナル制度の要件（労使委員会の4/5以上の決議・届出、対象業務、年収1,075万円以上、本人の書面等による同意、年間104日以上かつ4週4日以上の休日確保など）は非常に重要です。"
+            },
+            {
+                id: 106,
+                category: "労働時間・休憩・休日",
+                year: "令和5年",
+                text: "労働基準法第41条第2号に規定する「監督若しくは管理の地位にある者」（管理監督者）に該当するか否かは、部長、工場長等の職制上の名称にとらわれず、職務内容、責任と権限、勤務態様（出退勤の自由があるか等）、賃金等の待遇（その地位にふさわしい待遇がなされているか等）の実態に即して判断される。",
+                answer: true,
+                ref: "労働基準法第41条第2号、昭22.9.13発基17号、昭63.3.14基発150号",
+                explanation: "正しい記述です。いわゆる「名ばかり管理職」は管理監督者には該当せず、実態（経営者と一体的な立場にあるか、労働時間管理の裁量があるか、相応の処遇を受けているか）により厳格に判断されます。"
+            },
+            {
+                id: 107,
+                category: "労働時間・休憩・休日",
+                year: "令和4年",
+                text: "監視又は断続的労働に従事する者で、使用者が行政官庁の許可を受けたものについては、労働基準法に定める労働時間、休憩及び休日に関する規定が適用除外されるが、この「断続的労働」には、通常の勤務と併せて行われる宿直又は日直の勤務も含まれ、これについても行政官庁の許可を受けることで労働時間等の規定の適用が除外される。",
+                answer: true,
+                ref: "労働基準法第41条第3号、同法施行規則第23条",
+                explanation: "正しい記述です。宿日直勤務は本来業務とは別の断続的業務であり、所轄労働基準監督署長の許可を受けることで労働時間・休憩・休日の規定の適用が除外されます（ただし、一定の宿日直手当の支払いや睡眠設備等の基準を満たす必要があります）。"
+            },
+            {
+                id: 108,
+                category: "労働時間・休憩・休日",
+                year: "令和3年",
+                text: "労働基準法第38条第1項は、「労働時間は、事業場を異にする場合においても、労働時間に関する規定の適用については通算する。」と規定しているが、ここにいう「事業場を異にする場合」には、同一の事業主に属する異なる事業場で労働する場合だけでなく、事業主を異にする複数の事業場で労働する場合（副業・兼業）も含まれる。",
+                answer: true,
+                ref: "労働基準法第38条第1項、昭23.5.14基発769号",
+                explanation: "正しい記述です。事業主が同一であるか否かを問わず、複数の事業場で労働する場合は原則として労働時間が通算されます。"
+            },
+            {
+                id: 109,
+                category: "労働時間・休憩・休日",
+                year: "令和2年",
+                text: "坑内労働については、労働者が坑口に入った時刻から坑口を出た時刻までの時間を、休憩時間を含め労働時間とみなす（坑内労働の特例）ため、坑内労働者に対しては労働基準法第34条の休憩時間を与えなくてもよい。",
+                answer: false,
+                ref: "労働基準法第38条第2項",
+                explanation: "誤りです。坑内労働者の場合、坑口に入った時刻から出た時刻までの時間（休憩時間を含む）が労働時間とみなされますが、休憩時間そのものを与えなくてよいわけではなく、第34条第1項（休憩の付与）及び第3項（自由利用）は適用されます（第2項の一斉付与のみ適用除外）。"
+            },
+            {
+                id: 110,
+                category: "労働時間・休憩・休日",
+                year: "令和元年",
+                text: "労働者が業務上の必要により出張する場合において、出張中の休日に物品の監視等別段の指示がある場合を除き、単に旅行する日（移動日）は、休日労働には該当しない。",
+                answer: true,
+                ref: "労働基準法第35条、昭23.3.17基発461号",
+                explanation: "正しい記述です。出張のための単なる移動時間（通勤と同様、自由利用が妨げられていない時間）は労働時間とはみなされないため、休日の移動も休日労働には該当しません。"
+            },
+            {
+                id: 111,
+                category: "労働時間・休憩・休日",
+                year: "平成30年",
+                text: "使用者が労働者の過半数代表者を選出するに当たり、管理監督者を過半数代表者とすることはできないが、使用者の意向に基づき選出された者であっても、事業場の労働者の過半数がその者の選任を支持していることが明確である場合は、適法な過半数代表者として認められる。",
+                answer: false,
+                ref: "労働基準法施行規則第6条の2第1項",
+                explanation: "誤りです。過半数代表者の要件は、①法第41条第2号に規定する監督又は管理の地位にある者でないこと、②法に規定する協定等をする者を選出することを明らかにして実施される投票、挙手等の方法による手続により選出された者であって、使用者の意向に基づき選出されたものでないこと、の2つをいずれも満たす必要があります。"
+            },
+            {
+                id: 112,
+                category: "労働時間・休憩・休日",
+                year: "平成29年",
+                text: "使用者が締結する36協定には有効期間の定めをしなければならず、その有効期間は、最も短い場合でも1年間としなければならない。",
+                answer: false,
+                ref: "労働基準法施行規則第16条第2項、平11.3.31基発169号",
+                explanation: "誤りです。36協定には有効期間の定めをする必要がありますが、最短期間の制限はありません（1か月や3か月でも可能です）。なお、定期的な見直しの観点から、有効期間は1年間とすることが望ましいとされています。"
+            },
+            {
+                id: 113,
+                category: "労働時間・休憩・休日",
+                year: "平成28年",
+                text: "自動車の運転の業務に従事する労働者については、令和6年4月1日以降、時間外労働の上限規制が適用され、特別条項付き36協定を締結する場合であっても、時間外労働の上限は年960時間以内とされている。なお、単月100時間未満及び複数月平均80時間以内の規制は適用されない。",
+                answer: true,
+                ref: "労働基準法第140条",
+                explanation: "正しい記述です。令和6年4月1日以降、自動車運転業務については特別条項の年間上限が「年960時間以内」とされ、単月100時間未満・複数月平均80時間以内・月45時間超年6回までの規制は適用されません（一方、建設事業については災害の復旧・復興の事業を除き、単月100時間未満・複数月平均80時間以内が適用されます）。"
+            },
+            {
+                id: 114,
+                category: "労働時間・休憩・休日",
+                year: "令和7年",
+                text: "テレワーク（在宅勤務等）において、労働者が業務に従事した時間の算定が困難な場合であっても、情報通信機器が常時通信可能な状態にあり、使用者から随時具体的な指示がなされ得る状態にあるときは、原則として事業場外みなし労働時間制を適用することはできない。",
+                answer: true,
+                ref: "労働基準法第38条の2第1項、令3.3.25基発0325第2号",
+                explanation: "正しい記述です。テレワークであっても、①情報通信機器が常時通信可能な状態におくこととされていないこと、②随時使用者の具体的な指示に基づいて業務を行っていないこと、の2つを満たす場合に限り、事業場外みなし労働時間制を適用できます。"
+            },
+            {
+                id: 115,
+                category: "労働時間・休憩・休日",
+                year: "令和6年",
+                text: "労使協定により締結された36協定は、労働基準監督署長に届け出ることによって初めてその効力（免罰的効力）が発生するため、協定を締結しただけでは、たとえ協定の範囲内であっても法定労働時間を超えて労働させることはできない。",
+                answer: true,
+                ref: "労働基準法第36条第1項、昭63.3.14基発150号",
+                explanation: "正しい記述です。36協定は「締結」と「行政官庁（所轄労働基準監督署長）への届出」の両方が揃って初めて免罰的効力が発生します。"
+            },
+            {
+                id: 116,
+                category: "労働時間・休憩・休日",
+                year: "令和5年",
+                text: "農業又は水産業に従事する労働者については、労働基準法第41条第1号により労働時間、休憩及び休日に関する規定が適用除外されるため、1日8時間・1週40時間を超えて労働させても時間外労働の割増賃金を支払う必要はない。",
+                answer: true,
+                ref: "労働基準法第41条第1号",
+                explanation: "正しい記述です。別表第1第6号（農林業。ただし林業は除く！）及び第7号（畜産業・養蚕業・水産業）に従事する労働者は、第41条第1号により労働時間・休憩・休日の規定が適用除外されます（※林業は適用除外ではない点に注意）。"
+            },
+            {
+                id: 117,
+                category: "労働時間・休憩・休日",
+                year: "令和4年",
+                text: "使用者が労働者に与える休憩時間は、1日の労働時間が8時間を超える場合においては少なくとも1時間与えなければならないが、この1時間の休憩を30分ずつ2回に分割して労働時間の途中に与えることは違法ではない。",
+                answer: true,
+                ref: "労働基準法第34条第1項、昭22.9.13発基17号",
+                explanation: "正しい記述です。休憩時間は労働時間の途中に与えればよく、分割して与えること自体は禁止されていません。"
+            },
+            {
+                id: 118,
+                category: "労働時間・休憩・休日",
+                year: "令和3年",
+                text: "列車、気動車、電車、自動車、船舶又は航空機に乗務する機関手、運転手、操縦士、車掌、列車掛、荷扱手、列車手、給仕、暖冷房乗務員及び電源乗務員で長距離にわたり継続して乗務する者については、一定の要件のもとで休憩時間を与えないことができる。",
+                answer: true,
+                ref: "労働基準法第40条第1項、同法施行規則第32条第1項",
+                explanation: "正しい記述です。長距離継続乗務員や屋内勤務者30人未満の郵便局における郵便業務従事者等については、労働基準法施行規則第32条により休憩を与えないことができる特例が設けられています。"
+            },
+            {
+                id: 119,
+                category: "労働時間・休憩・休日",
+                year: "令和2年",
+                text: "使用者は、36協定の締結に当たり、その事業場に労働者の過半数で組織する労働組合がない場合において、労働者の過半数を代表する者を選出するときは、当該代表者が協定等に関する事務を円滑に遂行することができるよう必要な配慮を行わなければならない。",
+                answer: true,
+                ref: "労働基準法施行規則第6条の2第4項",
+                explanation: "正しい記述です。使用者は、過半数代表者が協定締結等の事務を円滑に遂行できるよう必要な配慮（事務機器の提供や労働時間中の事務処理の容認など）を行う義務があります。"
+            },
+            {
+                id: 120,
+                category: "労働時間・休憩・休日",
+                year: "令和元年",
+                text: "労働基準法第35条に規定する「休日」とは、労働契約において労働義務がないとされている日をいうため、あらかじめ労働義務が免除されている日であれば、業務の都合でその日に出勤させたとしても同条の休日労働には該当しない。",
+                answer: false,
+                ref: "労働基準法第35条",
+                explanation: "誤りです。第35条の法定休日（毎週1回又は4週4日）に労働させた場合は、36協定の締結・届出が必要であり、かつ3割5分以上の割増賃金を支払わなければならない「休日労働」に該当します。"
+            },
+
+            // =========================================================================
+            // 5. 変形労働・フレックス・みなし労働（第121問〜第145問）
+            // =========================================================================
+            {
+                id: 121,
+                category: "変形労働・フレックス・みなし",
+                year: "令和7年",
+                text: "1か月単位の変形労働時間制は、1か月以内の一定の期間を平均し1週間当たりの労働時間が40時間（特例措置対象事業場にあっては44時間）を超えない定めをした場合において、特定された週又は特定された日において法定労働時間を超えて労働させることができる制度であり、労使協定の締結又は就業規則その他これに準ずるものにより定めることで導入できる。",
+                answer: true,
+                ref: "労働基準法第32条の2第1項",
+                explanation: "正しい記述です。1か月単位の変形労働時間制は、①労使協定（行政官庁への届出要）または②就業規則その他これに準ずるもの（常時10人未満の事業場を含む）のいずれかにより導入できます。"
+            },
+            {
+                id: 122,
+                category: "変形労働・フレックス・みなし",
+                year: "令和6年",
+                text: "1か月単位の変形労働時間制を採用している事業場において、就業規則等により各日及び各週の労働時間をあらかじめ特定しなければならないが、業務の都合によって使用者が任意に労働時間を変更することができる旨の条項を就業規則に定めておけば、事後に労働時間を変更しても適法である。",
+                answer: false,
+                ref: "労働基準法第32条の2、昭63.3.14基発150号",
+                explanation: "誤りです。1か月単位の変形労働時間制では、変形期間の開始前までに各日・各週の労働時間を具体的に特定する必要があり、使用者が業務の都合で任意に変更できる旨の定めは認められません。"
+            },
+            {
+                id: 123,
+                category: "変形労働・フレックス・みなし",
+                year: "令和5年",
+                text: "フレックスタイム制を採用する場合、清算期間は3か月以内の期間に限られるが、清算期間が1か月を超える場合においては、労使協定を行政官庁に届け出なければならず、また、1か月ごとの労働時間が週平均50時間を超えないようにしなければならない。",
+                answer: true,
+                ref: "労働基準法第32条の3第1項・第2項・第4項",
+                explanation: "正しい記述です。フレックスタイム制の清算期間の上限は3か月です。清算期間が1か月以内の場合は労使協定の届出は不要ですが、1か月を超える場合は労使協定の届出が必要となり、かつ清算期間を1か月ごとに区分した各期間において週平均50時間を超えて労働させた時間はその月の時間外労働として割増賃金の支払いが必要となります。"
+            },
+            {
+                id: 124,
+                category: "変形労働・フレックス・みなし",
+                year: "令和4年",
+                text: "フレックスタイム制を採用する場合には、就業規則その他これに準ずるものにより、始業及び終業の時刻をその労働者の決定にゆだねる旨を定め、かつ、労使協定において対象労働者の範囲、清算期間、清算期間における総労働時間等を定めなければならないが、コアタイム（労働者が労働しなければならない時間帯）及びフレキシブルタイムは必ず定めなければならない事項ではない。",
+                answer: true,
+                ref: "労働基準法第32条の3第1項、昭63.1.1基発1号",
+                explanation: "正しい記述です。コアタイムやフレキシブルタイムは、設ける場合に労使協定に定めるべき事項であり、必ず設けなければならないものではありません（コアタイムのない「スーパーフレックスタイム制」も適法です）。"
+            },
+            {
+                id: 125,
+                category: "変形労働・フレックス・みなし",
+                year: "令和3年",
+                text: "フレックスタイム制において、清算期間（1か月以内とする。）における実際の労働時間が、あらかじめ定められた総労働時間（法定労働時間の総枠以内）に不足した場合には、その不足時間分を次の清算期間に繰り越して労働させることができるが、逆に実際の労働時間が総労働時間を超えた場合（法定労働時間の総枠を超えた場合）の過剰時間分を次の清算期間に繰り越して相殺することはできない。",
+                answer: true,
+                ref: "労働基準法第32条の3第1項、昭63.1.1基発1号",
+                explanation: "正しい記述です。総労働時間に不足した場合、その不足分を次の清算期間に繰り越すこと（法定労働時間の総枠の範囲内に限る）は認められますが、過剰労働（法定労働時間の総枠を超えた時間外労働）を次期に繰り越して割増賃金を支払わないことは違法です。"
+            },
+            {
+                id: 126,
+                category: "変形労働・フレックス・みなし",
+                year: "令和2年",
+                text: "1年単位の変形労働時間制は、1か月を超え1年以内の一定の期間を平均し1週間当たりの労働時間が40時間を超えない範囲内において採用することができるが、この制度は特例措置対象事業場（週44時間）であっても、週平均40時間以内でなければならない。",
+                answer: true,
+                ref: "労働基準法第32条の4第1項、同法施行規則第25条の2",
+                explanation: "正しい記述です。特例措置対象事業場（週44時間）が認められるのは、通常の労働時間制と「1か月単位の変形労働時間制」「フレックスタイム制」のみであり、「1年単位の変形労働時間制」を採用する場合は特例措置対象事業場であっても週平均40時間以内とする必要があります。"
+            },
+            {
+                id: 127,
+                category: "変形労働・フレックス・みなし",
+                year: "令和元年",
+                text: "1年単位の変形労働時間制における労働時間等の限度は、対象期間が3か月を超える場合においては、1日10時間、1週52時間とされており、かつ、対象期間における労働日数の限度は1年当たり280日、連続して労働させる日数の限度は原則として6日（特定期間においては1週間に1日の休日が確保できる日数、すなわち最長12日）である。",
+                answer: true,
+                ref: "労働基準法第32条の4第3項、同法施行規則第12条の4",
+                explanation: "正しい記述です。対象期間が「3か月を超える」場合の上限（1日10時間、1週52時間、年280日、48時間超の週は連続3週まで等）は、対象期間が3か月以下の場合は適用されませんが、連続労働日数の限度（原則6日、特定期間12日）は対象期間の長短にかかわらず適用されます。"
+            },
+            {
+                id: 128,
+                category: "変形労働・フレックス・みなし",
+                year: "平成30年",
+                text: "1年単位の変形労働時間制を採用している事業場において、対象期間の途中で退職した労働者又は途中から採用された労働者について、当該労働者が実際に労働した期間を平均し1週間当たり40時間を超えて労働させた時間（すでに時間外割増賃金を支払った時間を除く。）がある場合には、使用者はその超えた時間について割増賃金を支払わなければならない。",
+                answer: true,
+                ref: "労働基準法第32条の4の2",
+                explanation: "正しい記述です。対象期間の途中で入退社した労働者については、実労働期間を平均して週40時間を超えた部分について清算し、割増賃金を支払わなければなりません。"
+            },
+            {
+                id: 129,
+                category: "変形労働・フレックス・みなし",
+                year: "平成29年",
+                text: "1週間単位の非定型的変形労働時間制は、日ごとの業務に著しい繁閑の差が生ずることが多く、かつ、これを予測した上で就業規則その他これに準ずるものにより各日の労働時間を特定することが困難な事業として厚生労働省令で定める事業（小売業、旅館、料理店及び飲食店の事業）であって、常時使用する労働者の数が30人未満の事業場に限り、労使協定の締結・届出により採用することができる。",
+                answer: true,
+                ref: "労働基準法第32条の5第1項・第2項、同法施行規則第12条の5",
+                explanation: "正しい記述です。1週間単位の非定型的変形労働時間制は、①小売業、旅館、料理店、飲食店の4業種で、②常時30人未満の事業場に限り、③労使協定の締結・届出により導入でき、1日の上限は10時間（週40時間以内）、各日の労働時間は少なくともその1週間の開始前に書面で通知する必要があります。"
+            },
+            {
+                id: 130,
+                category: "変形労働・フレックス・みなし",
+                year: "平成28年",
+                text: "1か月単位の変形労働時間制、1年単位の変形労働時間制又は1週間単位の非定型的変形労働時間制を適用している事業場であっても、妊産婦が請求した場合においては、これらの変形労働時間制を適用して法定労働時間を超えて労働させてはならないが、フレックスタイム制については妊産婦から請求があった場合でも適用することができる。",
+                answer: true,
+                ref: "労働基準法第66条第1項",
+                explanation: "正しい記述です。妊産婦が請求した場合、変形労働時間制（1か月単位、1年単位、1週間単位）による法定労働時間を超える労働は禁止されますが、「フレックスタイム制」は労働者自身の裁量で始業・終業時刻を決められるため適用除外となっていません。"
+            },
+            {
+                id: 131,
+                category: "変形労働・フレックス・みなし",
+                year: "令和7年",
+                text: "労働者が労働時間の全部又は一部について事業場外で業務に従事した場合において、労働時間を算定し難いときは、原則として所定労働時間労働したものとみなされるが、当該業務を遂行するためには通常所定労働時間を超えて労働することが必要となる場合においては、当該業務の遂行に通常必要とされる時間労働したものとみなされる。",
+                answer: true,
+                ref: "労働基準法第38条の2第1項",
+                explanation: "正しい記述です。事業場外みなし労働時間制の基本原則です。なお、「通常必要とされる時間」について労使協定を締結した場合は、その協定で定める時間を「通常必要とされる時間」とします（その時間が法定労働時間を超える場合は、労使協定の行政官庁への届出が必要です）。"
+            },
+            {
+                id: 132,
+                category: "変形労働・フレックス・みなし",
+                year: "令和6年",
+                text: "事業場外みなし労働時間制が適用される場合において、当該労働者が深夜（午後10時から午前5時まで）に業務に従事したときや休日に労働したときは、みなし労働時間制の適用があっても、深夜業や休日労働に関する規定は適用されるため、深夜割増賃金や休日割増賃金を支払わなければならない。",
+                answer: true,
+                ref: "労働基準法第38条の2、昭63.1.1基発1号",
+                explanation: "正しい記述です。事業場外みなし労働時間制や裁量労働制は、労働時間の「算定」に関するみなし規定であり、休憩、休日、深夜業の割増賃金に関する規定は通常どおり適用されます。"
+            },
+            {
+                id: 133,
+                category: "変形労働・フレックス・みなし",
+                year: "令和5年",
+                text: "専門業務型裁量労働制を導入するためには、労使協定を締結し行政官庁に届け出ることが必要であるが、令和6年4月の法改正により、労使協定に「制度の適用について労働者本人の同意を得ること」及び「同意をしなかった労働者に対して解雇その他不利益な取扱いをしないこと」並びに「同意の撤回の手続」を定めることが義務付けられた。",
+                answer: true,
+                ref: "労働基準法第38条の3第1項、同法施行規則第24条の2の2第3項",
+                explanation: "正しい記述です。令和6年4月1日施行の労働基準法施行規則改正により、従来は企画業務型裁量労働制のみに求められていた「本人の同意」と「不利益取扱いの禁止」に加え、「同意の撤回手続」を労使協定に定めることが、専門業務型裁量労働制でも必須となりました。"
+            },
+            {
+                id: 134,
+                category: "変形労働・フレックス・みなし",
+                year: "令和6年",
+                text: "企画業務型裁量労働制を導入するためには、労使委員会の委員の5分の4以上の多数による議決により決議をし、行政官庁に届け出るとともに、対象労働者の同意を得なければならない。なお、令和6年4月の法改正により、労使委員会の決議事項に「同意の撤回の手続」及び「対象労働者に適用される評価制度及びこれに対応する賃金制度を変更する場合に、労使委員会に対し変更内容の説明を行うこと」が追加された。",
+                answer: true,
+                ref: "労働基準法第38条の4第1項、同法施行規則第24条の2の3第3項",
+                explanation: "正しい記述です。令和6年4月の法改正ポイントで、企画業務型裁量労働制の労使委員会の決議事項に「同意の撤回手続」と「評価制度・賃金制度変更時の労使委員会への事前説明」が追加されました。"
+            },
+            {
+                id: 135,
+                category: "変形労働・フレックス・みなし",
+                year: "令和4年",
+                text: "専門業務型裁量労働制の対象業務は厚生労働省令及び大臣告示で限定列挙されており（全20業務）、令和6年4月からは新たに「銀行又は証券会社における顧客の合併及び買収に関する調査又は分析及びこれに基づく合併及び買収に関する考案及び助言の業務（いわゆるM&Aアドバイザリー業務）」が追加された。",
+                answer: true,
+                ref: "労働基準法第38条の3第1項、同法施行規則第24条の2の2第2項",
+                explanation: "正しい記述です。専門業務型裁量労働制の対象業務は、令和6年4月からM&Aアドバイザリー業務が追加され、計20業務となっています。"
+            },
+            {
+                id: 136,
+                category: "変形労働・フレックス・みなし",
+                year: "令和3年",
+                text: "企画業務型裁量労働制における労使委員会の労働者代表委員は、過半数労働組合（ない場合は過半数代表者）に任期を定めて指名された者でなければならず、かつ、その選任について当該事業場の労働者の過半数の信任を得なければならない。",
+                answer: false,
+                ref: "労働基準法第38条の4第2項第1号",
+                explanation: "誤りです。労使委員会の労働者代表委員は過半数組合（ない場合は過半数代表者）に「任期を定めて指名された者」であることが要件であり、労働者の過半数の「信任」を得ることは法律上の要件ではありません（平成15年改正で信任要件は削除されました）。"
+            },
+            {
+                id: 137,
+                category: "変形労働・フレックス・みなし",
+                year: "令和2年",
+                text: "企画業務型裁量労働制を導入した事業場の使用者は、対象労働者の労働時間の状況並びに健康及び福祉を確保するための措置の実施状況について、決議が行われた日から起算して6か月以内ごとに1回、及びその後1年以内ごとに1回、行政官庁に報告しなければならない。",
+                answer: true,
+                ref: "労働基準法第38条の4第4項、同法施行規則第24条の2の5",
+                explanation: "正しい記述です。企画業務型裁量労働制における定期報告の頻度は、「決議が行われた日から起算して6か月以内ごとに1回、及びその後1年以内ごとに1回」です（以前は6か月ごとでしたが改正により1年以内ごとに1回となりました）。"
+            },
+            {
+                id: 138,
+                category: "変形労働・フレックス・みなし",
+                year: "令和元年",
+                text: "1か月単位の変形労働時間制を採用している事業場において、変形期間を1か月とした場合、その1か月の暦日数が31日である月の法定労働時間の総枠は、週40時間制の事業場では「177.1時間」（40時間×31日÷7日）である。",
+                answer: true,
+                ref: "労働基準法第32条の2第1項",
+                explanation: "正しい記述です。1か月単位の変形労働時間制の法定労働時間の総枠は「週法定労働時間 × 変形期間の暦日数 ÷ 7」で計算します（31日の月：177.1時間、30日の月：171.4時間、28日の月：160.0時間）。"
+            },
+            {
+                id: 139,
+                category: "変形労働・フレックス・みなし",
+                year: "平成30年",
+                text: "1か月単位の変形労働時間制、1年単位の変形労働時間制、1週間単位の非定型的変形労働時間制及びフレックスタイム制のいずれの制度を採用する場合であっても、労使協定を行政官庁に届け出なければならない。",
+                answer: false,
+                ref: "労働基準法第32条の2・第32条の3・第32条の4・第32条の5",
+                explanation: "誤りです。1か月単位の変形労働時間制を「就業規則等」で定める場合、およびフレックスタイム制で「清算期間が1か月以内」である場合は、行政官庁への届出は不要です。"
+            },
+            {
+                id: 140,
+                category: "変形労働・フレックス・みなし",
+                year: "平成29年",
+                text: "事業場外みなし労働時間制は、労働者が事業場外で業務に従事した場合であっても、何人かのグループで事業場外労働に従事し、そのメンバーの中に労働時間の管理をする者がいる場合や、携帯電話等によって随時使用者の指示を受けながら労働している場合には、労働時間を算定し難いときに該当しないため適用されない。",
+                answer: true,
+                ref: "労働基準法第38条の2第1項、昭63.1.1基発1号",
+                explanation: "正しい記述です。事業場外で働いていても、①グループ内に時間管理者がいる場合、②無線や携帯電話等で随時使用者の指示を受けている場合、③事業場において訪問先・帰社時刻等の具体的指示を受けてから外出し指示どおりに業務を行って帰社する場合には、労働時間の算定が可能であるため適用されません。"
+            },
+            {
+                id: 141,
+                category: "変形労働・フレックス・みなし",
+                year: "平成28年",
+                text: "1年単位の変形労働時間制において、対象期間中の労働日及び労働日ごとの労働時間をあらかじめ特定せず、対象期間を1か月以上の期間ごとに区分することとした場合においては、最初の期間については対象期間の開始前までに、その他の各期間についてはその各期間の開始の少なくとも30日前までに、労働者代表の同意を得て書面で労働日及び労働時間を定めなければならない。",
+                answer: true,
+                ref: "労働基準法第32条の4第2項",
+                explanation: "正しい記述です。1年単位の変形労働時間制において期間を区分して特定する場合、最初の期間以外の各期間については、各期間の開始の少なくとも「30日前まで」に過半数組合等の同意を得て書面で定める必要があります。"
+            },
+            {
+                id: 142,
+                category: "変形労働・フレックス・みなし",
+                year: "令和7年",
+                text: "専門業務型裁量労働制の労使協定に定める「1日の労働時間として算定される時間（みなし労働時間）」が、法定労働時間である8時間を超える時間（例えば9時間）と定められている場合であっても、労使協定の締結・届出だけで1時間分の時間外労働をさせることができ、別途36協定を締結する必要はない。",
+                answer: false,
+                ref: "労働基準法第36条・第38条の3、昭63.1.1基発1号",
+                explanation: "誤りです。裁量労働制のみなし労働時間が8時間を超える場合であっても、法定労働時間を超えて労働させるためには、別途36協定の締結・届出及び割増賃金の支払いが必要です。"
+            },
+            {
+                id: 143,
+                category: "変形労働・フレックス・みなし",
+                year: "令和6年",
+                text: "1か月単位の変形労働時間制において、時間外労働となる時間の計算は、①1日については、就業規則等により8時間を超える時間を定めた日はその時間、それ以外の日は8時間を超えて労働した時間、②1週間については、就業規則等により40時間を超える時間を定めた週はその時間、それ以外の週は40時間を超えて労働した時間（①で時間外となった時間を除く）、③変形期間については、変形期間の法定労働時間の総枠を超えて労働した時間（①及び②で時間外となった時間を除く）の合計となる。",
+                answer: true,
+                ref: "労働基準法第32条の2、昭63.1.1基発1号",
+                explanation: "正しい記述です。1か月単位および1年単位の変形労働時間制における時間外労働の3段階の算定方法（1日→1週→変形期間全体）の正確な記述です。"
+            },
+            {
+                id: 144,
+                category: "変形労働・フレックス・みなし",
+                year: "令和5年",
+                text: "企画業務型裁量労働制の対象業務は、事業の運営に関する事項についての企画、立案、調査及び分析の業務であって、当該業務の性質上これを適切に遂行するにはその遂行の方法を大幅に労働者の裁量にゆだねる必要があるため、当該業務の遂行の手段及び時間配分の決定等に関し使用者が具体的な指示をしないこととする業務であるが、対象事業場は本社・本店に限られ、支社や支店では導入することができない。",
+                answer: false,
+                ref: "労働基準法第38条の4第1項、平12.1.1基発1号",
+                explanation: "誤りです。かつては本社・本店等に限られていましたが、法改正により現在は事業場単位の制限はなくなり、支社や支店であっても、事業運営上の重要な決定が行われる事業場であれば企画業務型裁量労働制を導入できます。"
+            },
+            {
+                id: 145,
+                category: "変形労働・フレックス・みなし",
+                year: "令和4年",
+                text: "満18歳に満たない年少者については、原則として1か月単位の変形労働時間制、1年単位の変形労働時間制、1週間単位の非定型的変形労働時間制及びフレックスタイム制を適用することができないが、満15歳に達した日以後の最初の3月31日が終了した者については、1週48時間、1日8時間を超えない範囲内で、1か月単位又は1年単位の変形労働時間制を適用することができる。",
+                answer: true,
+                ref: "労働基準法第60条第1項・第3項",
+                explanation: "正しい記述です。年少者には原則として変形労働時間制やフレックスタイム制は適用されませんが、特例として満15歳年度末終了後の年少者には、1週48時間・1日8時間の範囲内で1か月単位または1年単位の変形労働時間制を適用できます。"
+            },
+
+            // =========================================================================
+            // 6. 年次有給休暇（第146問〜第165問）
+            // =========================================================================
+            {
+                id: 146,
+                category: "年次有給休暇",
+                year: "令和7年",
+                text: "使用者は、その雇入れの日から起算して6か月間継続勤務し全労働日の8割以上出勤した労働者に対して、継続し、又は分割した10労働日の有給休暇を与えなければならないが、その後は継続勤務1年ごとに1労働日ずつ加算し、雇入れの日から6年6か月以上継続勤務した場合には20労働日を与えなければならない。",
+                answer: false,
+                ref: "労働基準法第39条第1項・第2項",
+                explanation: "誤りです。継続勤務6か月で10日、1年6か月で11日、2年6か月で12日と1日ずつ加算されますが、3年6か月以降は「2労働日ずつ」加算されるため、3年6か月で14日、4年6か月で16日、5年6か月で18日、6年6か月以上で上限の20日となります。"
+            },
+            {
+                id: 147,
+                category: "年次有給休暇",
+                year: "令和6年",
+                text: "年次有給休暇の出勤率（全労働日の8割以上出勤）の算定に当たり、①業務上の負傷・疾病による療養休業期間、②育児・介護休業期間、③産前産後の女性が第65条の規定によって休業した期間、④年次有給休暇を取得した日は、出勤したものとみなされる。",
+                answer: true,
+                ref: "労働基準法第39条第10項、昭22.9.13発基17号",
+                explanation: "正しい記述です。これら4つの期間・日は出勤したものとみなして計算します。なお、生理休暇を取得した日や使用者の責めに帰すべき事由による休業日、正当なストライキの日などは、原則として「全労働日（分母）」から除外して計算します。"
+            },
+            {
+                id: 148,
+                category: "年次有給休暇",
+                year: "令和5年",
+                text: "週所定労働時間が30時間未満であり、かつ週所定労働日数が4日以下（又は年間所定労働日数が216日以下）である労働者に対しては、その所定労働日数に応じた比例付与の日数の年次有給休暇を与えなければならないが、例えば週所定労働時間が32時間で週所定労働日数が3日である労働者に対しては、通常の労働者と同じ日数（6か月継続勤務で10日）を与えなければならない。",
+                answer: true,
+                ref: "労働基準法第39条第3項、同法施行規則第24条の3",
+                explanation: "正しい記述です。比例付与の対象となるのは「週所定労働時間が30時間未満」かつ「週所定労働日数が4日以下（1年単位の場合は年間216日以下）」の両方を満たす労働者です。したがって、週3日勤務であっても週所定労働時間が30時間以上（32時間）であれば、通常の労働者と同じ付与日数が適用されます。"
+            },
+            {
+                id: 149,
+                category: "年次有給休暇",
+                year: "令和4年",
+                text: "使用者は、基準日において年次有給休暇が10日以上付与される労働者に対して、基準日から1年以内の期間に、当該労働者の有する年次有給休暇日数のうち5日について、労働者ごとの時季を定めることにより与えなければならないが、労働者が自ら時季指定して取得した日数や計画的付与により取得した日数がある場合には、その日数分を5日から控除しなければならない。",
+                answer: true,
+                ref: "労働基準法第39条第7項・第8項",
+                explanation: "正しい記述です。年10日以上の年休が付与される労働者（管理監督者や有期雇用労働者を含む）に対する「年5日の年休取得義務」に関する正しい内容です。労働者自らの請求や計画的付与で取得した日数分は、使用者の時季指定義務（5日）から控除されます。"
+            },
+            {
+                id: 150,
+                category: "年次有給休暇",
+                year: "令和3年",
+                text: "使用者が年次有給休暇の時季指定を行うに当たっては、あらかじめ当該労働者の意見を聴取し、その意見を尊重するよう努めなければならず、また、使用者は、時季、日数及び基準日を労働者ごとに明らかにした書類（年次有給休暇管理簿）を作成し、当該年次有給休暇を与えた期間中及び当該期間の満了後5年間（経過措置により当分の間は3年間）保存しなければならない。",
+                answer: true,
+                ref: "労働基準法第39条第7項、同法施行規則第24条の6・第24条の7",
+                explanation: "正しい記述です。年次有給休暇管理簿の作成・保存義務は、年休の付与期間中＋満了後5年間（当分の間3年間）です。"
+            },
+            {
+                id: 151,
+                category: "年次有給休暇",
+                year: "令和2年",
+                text: "労働者が請求した時季に年次有給休暇を与えることが事業の正常な運営を妨げる場合においては、使用者は他の時季にこれを与えることができる（時季変更権）が、年次有給休暇の利用目的を理由として時季変更権を行使することはできない。",
+                answer: true,
+                ref: "労働基準法第39条第5項、最判昭48.3.2（白石営林署事件）",
+                explanation: "正しい記述です。年次有給休暇をどのように利用するかは労働者の自由であり、使用者が利用目的を理由に時季変更権を行使することは許されません（ただし、その事業場における争議行為に参加するために請求された場合は、そもそも年休権の成立余地がないとされています）。"
+            },
+            {
+                id: 152,
+                category: "年次有給休暇",
+                year: "令和元年",
+                text: "使用者が労使協定（行政官庁への届出は不要）により年次有給休暇を与える時季に関する定めをした場合（計画的付与）、年次有給休暇の日数のうち5日を超える部分については、その協定の定めにより年次有給休暇を与えることができるが、この計画的付与の対象となる日については、労働者の時季指定権及び使用者の時季変更権のいずれも行使することができない。",
+                answer: true,
+                ref: "労働基準法第39条第6項、昭63.1.1基発1号",
+                explanation: "正しい記述です。労働者が自由に取得できる日数として少なくとも「5日」は残す必要があり（5日を超える部分が計画的付与の対象）、計画的付与で定められた日については労使双方ともに拘束され、時季指定権・時季変更権ともに行使できません。"
+            },
+            {
+                id: 153,
+                category: "年次有給休暇",
+                year: "平成30年",
+                text: "労使協定を締結することにより、年次有給休暇のうち5日を限度として、時間単位で与えることができる（時間単位年休）。この時間単位年休を日単位に換算する際の「1日の時間数」は、1日の所定労働時間数（1時間に満たない端数があるときは切り上げ）によることとされており、例えば1日の所定労働時間が7時間30分の労働者であれば、1日分は8時間として計算する。",
+                answer: true,
+                ref: "労働基準法第39条第4項、同法施行規則第24条の4",
+                explanation: "正しい記述です。時間単位年休は年5日分が上限であり、1日の所定労働時間に1時間未満の端数がある場合は時間単位に切り上げます（7時間30分→8時間）。なお、時間単位年休として取得した時間は、使用者の「年5日の時季指定義務」の履行日数にはカウントされません。"
+            },
+            {
+                id: 154,
+                category: "年次有給休暇",
+                year: "平成29年",
+                text: "年次有給休暇の期間については、就業規則その他これに準ずるもので定めるところにより、①平均賃金、②所定労働時間労働した場合に支払われる通常の賃金、又は③健康保険法に定める標準報酬月額の30分の1に相当する金額（労使協定が必要）のいずれかの賃金を支払わなければならない。",
+                answer: true,
+                ref: "労働基準法第39条第9項",
+                explanation: "正しい記述です。③標準報酬月額の30分の1相当額を選択する場合のみ、過半数組合等との労使協定の締結が必要です（届出は不要）。①または②は就業規則等の定めにより選択できます。"
+            },
+            {
+                id: 155,
+                category: "年次有給休暇",
+                year: "平成28年",
+                text: "年次有給休暇の請求権は2年間の消滅時効にかかるため、基準日に発生した年次有給休暇の未消化分は翌年度に限り繰り越されるが、退職予定の労働者が退職日までに消化しきれない年次有給休暇を、あらかじめ使用者が買い上げる旨の予約をすることは、年次有給休暇の取得を抑制することにつながるため違法である。",
+                answer: true,
+                ref: "労働基準法第39条・第115条、昭30.11.30基収4718号",
+                explanation: "正しい記述です。年休の事前買上げ予約や取得を抑制する買上げは違法です。ただし、時効により消滅した年休や退職により権利が消滅する残余年休に対して恩恵的に金銭を給付することは、年休の取得を抑制するものではないため違法ではありません。"
+            },
+            {
+                id: 156,
+                category: "年次有給休暇",
+                year: "令和7年",
+                text: "定年退職後に引き続き嘱託社員として再雇用された労働者については、新たに労働契約が締結されるため、年次有給休暇の継続勤務年数や付与日数はリセットされ、再雇用から6か月後に新たに10日が付与される。",
+                answer: false,
+                ref: "労働基準法第39条第1項・第2項、昭63.3.14基発150号",
+                explanation: "誤りです。定年退職後に嘱託等として継続雇用される場合、実質的に労働関係が継続しているため「継続勤務」として取り扱われ、それまでの勤続年数を通算して付与日数が算定されます（パートから正社員への切替え等も同様です）。"
+            },
+            {
+                id: 157,
+                category: "年次有給休暇",
+                year: "令和6年",
+                text: "使用者は、年次有給休暇を取得した労働者に対して、賃金の減額その他不利益な取扱いをしないようにしなければならないが、精皆勤手当や賞与の算定に際して、年次有給休暇を取得した日を欠勤として取り扱い、これらの手当や賞与を減額することは、第136条の努力義務規定に反するのみならず、公序良俗に反し無効となる場合がある。",
+                answer: true,
+                ref: "労働基準法第136条、最判平5.6.25（沼津交通事件）",
+                explanation: "正しい記述です。第136条自体は努力義務（罰則なし）ですが、判例上、年休取得を理由とする不利益取扱いが年休権の行使を抑制し公序に反する程度に至る場合は、民事上無効とされます。"
+            },
+            {
+                id: 158,
+                category: "年次有給休暇",
+                year: "令和5年",
+                text: "半日単位の年次有給休暇については、労働基準法に規定はないが、労働者がその取得を希望して時季を指定し、これに使用者が同意した場合であって、本来の取得方法による休暇取得の阻害とならない範囲で適切に運用される限り、認められる。なお、半日単位年休を取得した日数は、使用者の年5日の時季指定義務の履行日数として0.5日分カウントすることができる。",
+                answer: true,
+                ref: "労働基準法第39条、平7.7.27基監発33号、平30.9.7基発0907第1号",
+                explanation: "正しい記述です。時間単位年休は年5日の時季指定義務の履行日数にカウントできませんが、半日単位年休（0.5日）はカウントすることができます。"
+            },
+            {
+                id: 159,
+                category: "年次有給休暇",
+                year: "令和4年",
+                text: "労働者が長期かつ連続の年次有給休暇を取得しようとするときは、使用者が代替勤務者を確保する等の調整を行うために時間的余裕を必要とすることから、労働者が具体的な時季を指定せず、また事前に使用者との調整を経ずに一方的に長期休暇を請求した場合には、使用者は時季変更権を行使することができる。",
+                answer: true,
+                ref: "労働基準法第39条第5項、最判平4.6.23（時事通信社事件）",
+                explanation: "正しい記述です。判例（時事通信社事件）では、長期連続の年休取得に際して労働者が事前の調整を経ず一方的に時季指定したため、使用者が代替勤務者確保のための合理的期間内に代替要員を確保できない場合には、時季変更権の行使が適法と認められています。"
+            },
+            {
+                id: 160,
+                category: "年次有給休暇",
+                year: "令和3年",
+                text: "計画的付与の労使協定を締結する場合において、まだ年次有給休暇の権利が発生していない新入社員や、保有日数が5日以下の労働者に対しては、計画的付与の対象日に特別の有給休暇を与えるか、又は休業手当（平均賃金の60％以上）を支払う等の措置を講ずる必要がある。",
+                answer: true,
+                ref: "労働基準法第26条・第39条第6項、昭63.3.14基発150号",
+                explanation: "正しい記述です。事業場全体の休業による一斉付与方式をとる場合、年休の保有日数が不足する労働者には特別休暇（有給）を付与するか、少なくとも第26条の休業手当を支払う必要があります。"
+            },
+            {
+                id: 161,
+                category: "年次有給休暇",
+                year: "令和2年",
+                text: "年次有給休暇の権利は、労働者が「雇入れの日から6か月継続勤務」し、かつ「全労働日の8割以上出勤」するという法律上の要件を満たすことによって当然に発生するものであり、労働者の請求や使用者の承認によって初めて発生するものではない。",
+                answer: true,
+                ref: "労働基準法第39条第1項、最判昭48.3.2（白石営林署事件）",
+                explanation: "正しい記述です。年休権は法律上の要件を満たせば当然に発生し、具体的な休暇日の特定は労働者の「時季指定権」の行使（使用者の時季変更権が適法に行使されない限り）によって確定します。"
+            },
+            {
+                id: 162,
+                category: "年次有給休暇",
+                year: "令和元年",
+                text: "労働基準法第39条第1項及び第2項に定める基準日（雇入れの日から6か月後及びその後1年ごと）よりも前に、使用者が前倒しで年次有給休暇を付与した場合（斉一的取扱い）であっても、次年度以降の基準日は原則どおり雇入れの日を基準として計算しなければならない。",
+                answer: false,
+                ref: "労働基準法第39条、平6.1.4基発1号",
+                explanation: "誤りです。法定の基準日より前倒しで付与した場合には、初年度の付与日（前倒しした日）から1年以内の日を次年度の基準日とし、以後順次1年ずつ繰り上げて付与する必要があります。"
+            },
+            {
+                id: 163,
+                category: "年次有給休暇",
+                year: "平成30年",
+                text: "年次有給休暇の比例付与の対象となる労働者が、基準日において10日以上の年次有給休暇を付与された場合（例えば週所定労働日数4日で継続勤務3年6か月以上の者で10日付与された場合）は、使用者による年5日の時季指定義務の対象となる。",
+                answer: true,
+                ref: "労働基準法第39条第7項",
+                explanation: "正しい記述です。比例付与の対象者であっても、付与日数が「10日以上」となった年度からは、通常の労働者と同様に年5日の時季指定義務の対象となります。"
+            },
+            {
+                id: 164,
+                category: "年次有給休暇",
+                year: "平成29年",
+                text: "労働者が年次有給休暇の請求（時季指定）をする場合、原則としてその前日までに請求しなければならないが、当日の始業時刻前に申し出た場合であっても、使用者がこれを承認して年次有給休暇として取り扱えば適法である。",
+                answer: true,
+                ref: "労働基準法第39条第5項",
+                explanation: "正しい記述です。使用者が時季変更権を行使する余地を与えるため、原則は前日までの請求が求められますが、当日の申し出であっても使用者が承認して年休として処理することは何ら問題ありません。"
+            },
+            {
+                id: 165,
+                category: "年次有給休暇",
+                year: "平成28年",
+                text: "労働基準法第41条に規定する管理監督者や監視・断続的労働従事者であっても、年次有給休暇に関する規定は適用されるため、一定の要件を満たせば年次有給休暇を付与しなければならず、また、10日以上付与された場合には年5日の時季指定義務の対象ともなる。",
+                answer: true,
+                ref: "労働基準法第39条・第41条",
+                explanation: "正しい記述です。第41条該当者であっても年次有給休暇の規定は完全に適用されます。"
+            },
+
+            // =========================================================================
+            // 7. 年少者・妊産婦等（第166問〜第180問）
+            // =========================================================================
+            {
+                id: 166,
+                category: "年少者・妊産婦等",
+                year: "令和7年",
+                text: "使用者は、児童が満15歳に達した日以後の最初の3月31日が終了するまで、これを使用してはならないが、非工業的事業に係る職業で、児童の健康及び福祉に有害でなく、かつ、その労働が軽易なものについては、行政官庁の許可を受けて、満13歳以上の児童を修学時間外に使用することができ、また、映画の製作又は演劇の事業については、満13歳未満の児童についても同様に使用することができる。",
+                answer: true,
+                ref: "労働基準法第56条第1項・第2項",
+                explanation: "正しい記述です。最低年齢（15歳年度末終了まで使用禁止）の例外として、①満13歳以上の児童（非工業的事業・健康福祉に有害でない軽易業務・修学時間外・労基署長許可）と、②満13歳未満の児童（映画製作・演劇の事業・労基署長許可）の2つが認められています。"
+            },
+            {
+                id: 167,
+                category: "年少者・妊産婦等",
+                year: "令和6年",
+                text: "使用者は、満18歳に満たない年少者については、その年齢を証明する戸籍証明書を事業場に備え付けなければならず、また、修学時間外に使用する満15歳年度末終了前の児童については、これに加えて学校長の証明書及び親権者又は後見人の同意書を事業場に備え付けなければならない。",
+                answer: true,
+                ref: "労働基準法第57条第1項・第2項",
+                explanation: "正しい記述です。満18歳未満は「年齢証明書（住民票記載事項証明書で可）」、児童（15歳年度末前）はそれに加えて「学校長の証明書」と「親権者等の同意書」の備付けが必要です。"
+            },
+            {
+                id: 168,
+                category: "年少者・妊産婦等",
+                year: "令和5年",
+                text: "親権者又は後見人は、未成年者に代って労働契約を締結してはならないが、労働契約が未成年者に不利であると認める場合においては、将来に向ってこれを解除することができる。なお、この解除権は行政官庁にも認められている。",
+                answer: true,
+                ref: "労働基準法第58条第1項・第2項",
+                explanation: "正しい記述です。未成年者の労働契約の代理締結は禁止されていますが、契約が未成年者に不利と認める場合の将来に向かっての解除権は、親権者・後見人だけでなく行政官庁（労働基準監督署長）にも認められています。"
+            },
+            {
+                id: 169,
+                category: "年少者・妊産婦等",
+                year: "令和4年",
+                text: "未成年者は、独立して賃金を請求することができ、親権者又は後見人は、未成年者の賃金を代って受け取ってはならないが、未成年者本人が委任状を作成して親権者に受領を委任した場合であっても、親権者が代わって受け取ることは禁止されている。",
+                answer: true,
+                ref: "労働基準法第59条、昭22.9.13発基17号",
+                explanation: "正しい記述です。親権者等が未成年者の賃金を代わって受け取ることは、たとえ未成年者本人の同意や委任があっても絶対的に禁止されています（本人が病気等の場合の単なる使者としての受領は別です）。"
+            },
+            {
+                id: 170,
+                category: "年少者・妊産婦等",
+                year: "令和3年",
+                text: "使用者は、満18歳に満たない年少者については、36協定を締結した場合であっても時間外労働及び休日労働をさせることはできないが、災害その他避けることのできない事由によって臨時の必要がある場合（第33条第1項）又は公務のために臨時の必要がある場合（第33条第3項）においては、年少者に時間外労働又は休日労働をさせることができる。",
+                answer: true,
+                ref: "労働基準法第33条・第60条第1項",
+                explanation: "正しい記述です。年少者には36協定による時間外・休日労働は一切認められませんが、第33条第1項・第3項の非常災害等の臨時の必要による時間外・休日労働は適用除外とされていないため可能です。"
+            },
+            {
+                id: 171,
+                category: "年少者・妊産婦等",
+                year: "令和2年",
+                text: "修学時間外に使用する満15歳年度末終了前の児童の労働時間は、修学時間を通算して1週間について40時間、1日について7時間を超えてはならない。",
+                answer: true,
+                ref: "労働基準法第60条第2項",
+                explanation: "正しい記述です。児童（15歳年度末前）の労働時間は「修学時間を通算して、1週40時間、1日7時間」が上限です。"
+            },
+            {
+                id: 172,
+                category: "年少者・妊産婦等",
+                year: "令和元年",
+                text: "使用者は、満18歳に満たない者を午後10時から午前5時までの間（深夜）に使用してはならないが、交替制によって使用する満16歳以上の「男性」については、例外的に深夜業に使用することができる。",
+                answer: true,
+                ref: "労働基準法第61条第1項ただし書",
+                explanation: "正しい記述です。年少者の深夜業禁止の例外の一つに「交替制によって使用する満16歳以上の男性」があります（女性は含まれない点に注意してください）。このほか、農林水産業、保健衛生業、電話交換の業務、非常災害等の場合、または交替制で労基署長の許可を受けた場合（午後10時30分まで、または午前5時30分から）も例外となります。"
+            },
+            {
+                id: 173,
+                category: "年少者・妊産婦等",
+                year: "平成30年",
+                text: "満18歳に満たない年少者が解雇の日から14日以内に帰郷する場合においては、使用者は必要な旅費を負担しなければならないが、その年少者の責めに帰すべき事由に基づいて解雇された場合で、行政官庁の認定を受けたときは、使用者は帰郷旅費を負担することを要しない。",
+                answer: true,
+                ref: "労働基準法第64条",
+                explanation: "正しい記述です。年少者の帰郷旅費負担は、解雇日から14日以内に帰郷する場合に義務付けられますが、年少者の責めに帰すべき事由による解雇で行政官庁の認定を受けた場合は除外されます。"
+            },
+            {
+                id: 174,
+                category: "年少者・妊産婦等",
+                year: "平成29年",
+                text: "使用者は、6週間（多胎妊娠の場合にあっては、14週間）以内に出産する予定の女性が休業を請求した場合においては、その者を就業させてはならず、また、産後8週間を経過しない女性を就業させてはならないが、産後6週間を経過した女性が請求した場合において、その者について医師が支障がないと認めた業務に就かせることは差し支えない。",
+                answer: true,
+                ref: "労働基準法第65条第1項・第2項",
+                explanation: "正しい記述です。産前休業（6週・多胎14週）は「本人の請求」が必要ですが、産後休業のうち「産後6週間」は本人の請求や医師の許可があっても就業させることが絶対的に禁止される強制休業期間です（産後6週経過後〜8週までは本人請求＋医師の認定があれば就業可能）。なお、出産当日は産前休業に含まれます。"
+            },
+            {
+                id: 175,
+                category: "年少者・妊産婦等",
+                year: "平成28年",
+                text: "労働基準法第65条に規定する「出産」には、妊娠4か月（1か月は28日として計算する。したがって妊娠85日以上）以後の分娩であれば、正常分娩のみならず、早産、死産、人工妊娠中絶も含まれる。",
+                answer: true,
+                ref: "労働基準法第65条、昭23.12.23基発1885号",
+                explanation: "正しい記述です。妊娠4か月（85日）以上の分娩であれば、死産や人工妊娠中絶であっても産後休業の対象となります。"
+            },
+            {
+                id: 176,
+                category: "年少者・妊産婦等",
+                year: "令和7年",
+                text: "使用者は、妊娠中の女性が請求した場合においては、他の軽易な業務に転換させなければならないが、この請求があった場合に新たに軽易な業務を創設してまで転換させる義務はなく、原則としてその女性が請求した業務に転換させれば足りる。",
+                answer: true,
+                ref: "労働基準法第65条第3項、昭61.3.20基発151号",
+                explanation: "正しい記述です。妊娠中の女性の軽易業務転換については、原則としてその女性が請求した業務に転換させる趣旨であり、新たに軽易な業務を創設してまで与える義務はないと解されています。"
+            },
+            {
+                id: 177,
+                category: "年少者・妊産婦等",
+                year: "令和6年",
+                text: "使用者は、妊産婦（妊娠中の女性及び産後1年を経過しない女性）が請求した場合においては、36協定が締結されている場合であっても時間外労働、休日労働又は深夜業をさせてはならない。",
+                answer: true,
+                ref: "労働基準法第66条第2項・第3項",
+                explanation: "正しい記述です。妊産婦からの請求があった場合、時間外労働、休日労働、深夜業のいずれも禁止されます。"
+            },
+            {
+                id: 178,
+                category: "年少者・妊産婦等",
+                year: "令和5年",
+                text: "生後満1年に達しない生児を育てる女性は、休憩時間のほか、1日2回各々少なくとも30分、その生児を育てるための時間（育児時間）を請求することができるが、1日の所定労働時間が4時間以内である場合には、1日1回少なくとも30分の育児時間を与えれば足りる。",
+                answer: true,
+                ref: "労働基準法第67条第1項、昭36.1.9基収8996号",
+                explanation: "正しい記述です。育児時間は原則「1日2回各々少なくとも30分」ですが、1日の労働時間が4時間以内の場合は「1日1回少なくとも30分」で足りるとされています。"
+            },
+            {
+                id: 179,
+                category: "年少者・妊産婦等",
+                year: "令和4年",
+                text: "使用者は、生理日の就業が著しく困難な女性が休暇を請求したときは、その者を生理日に就業させてはならないが、この生理休暇は、半日単位又は時間単位での請求であっても使用者は拒むことができない。",
+                answer: true,
+                ref: "労働基準法第68条、昭61.3.20基発151号",
+                explanation: "正しい記述です。生理休暇の請求日数に上限はなく、また半日単位や時間単位で請求された場合でも、その時間について就業させてはなりません。"
+            },
+            {
+                id: 180,
+                category: "年少者・妊産婦等",
+                year: "令和3年",
+                text: "使用者は、妊娠中の女性及び産後1年を経過しない女性（妊産婦）を、重量物を取り扱う業務や有害ガスを発散する場所における業務その他妊娠、出産、哺育等に有害な業務に就かせてはならないが、妊産婦以外の一般の女性については、重量物を取り扱う業務及び有害ガスを発散する場所における業務に限り就業が制限されている。",
+                answer: true,
+                ref: "労働基準法第64条の3第1項・第2項、女性労働基準規則第2条・第3条",
+                explanation: "正しい記述です。妊産婦については全24業務が就業制限の対象ですが、妊産婦以外の一般の女性については母性保護の観点から「重量物取扱業務」と「有害ガス発散場所での業務」の2業務に限り就業が制限されています。"
+            },
+
+            // =========================================================================
+            // 8. 就業規則・制裁・監督等（第181問〜第200問）
+            // =========================================================================
+            {
+                id: 181,
+                category: "就業規則・制裁・監督等",
+                year: "令和7年",
+                text: "常時10人以上の労働者を使用する使用者は、就業規則を作成し、行政官庁に届け出なければならないが、この「常時10人以上」の算定に当たっては、正社員のみならず、パートタイム労働者やアルバイト、嘱託社員等の非正規労働者も含めて算定し、企業全体ではなく個々の事業場単位で判断する。",
+                answer: true,
+                ref: "労働基準法第89条、昭63.3.14基発150号",
+                explanation: "正しい記述です。就業規則の作成・届出義務の「常時10人以上」は、事業場単位（工場、支店ごと）で判断し、パートやアルバイト等も含めた常態として使用する労働者数で算定します。"
+            },
+            {
+                id: 182,
+                category: "就業規則・制裁・監督等",
+                year: "令和6年",
+                text: "就業規則の絶対的必要記載事項は、①始業及び終業の時刻、休憩時間、休日、休暇並びに交替制の場合における就業時転換に関する事項、②賃金の決定、計算及び支払の方法、賃金の締切り及び支払の時期並びに昇給に関する事項、③退職に関する事項（解雇の事由を含む。）の3つであり、退職手当に関する事項は定めをする場合に記載すべき相対的必要記載事項である。",
+                answer: true,
+                ref: "労働基準法第89条第1号〜第3号の2",
+                explanation: "正しい記述です。退職手当や賞与、安全衛生、職業訓練、災害補償、表彰・制裁などは、事業場で定めをする場合に記載が必要となる「相対的必要記載事項」です。"
+            },
+            {
+                id: 183,
+                category: "就業規則・制裁・監督等",
+                year: "令和5年",
+                text: "使用者は、就業規則の作成又は変更について、当該事業場に労働者の過半数で組織する労働組合がある場合においてはその労働組合、ない場合においては労働者の過半数を代表する者の「同意」を得なければならず、同意を得ずに届け出た就業規則は無効である。",
+                answer: false,
+                ref: "労働基準法第90条第1項・第2項、昭23.10.30基発1575号",
+                explanation: "誤りです。就業規則の作成・変更時に必要なのは過半数組合等の「意見を聴くこと」（意見聴取）であり、「同意」までは不要です。反対意見が記載された意見書を添付して届け出ても、就業規則の効力は妨げられません（ただし、不利益変更の効力については労働契約法第9条・第10条の合理的理由等の要件が別途問題となります）。"
+            },
+            {
+                id: 184,
+                category: "就業規則・制裁・監督等",
+                year: "令和4年",
+                text: "就業規則で、労働者に対して減給の制裁を定める場合においては、その減給は、1回の額が平均賃金の1日分の半額を超え、総額が一賃金支払期における賃金の総額の10分の1を超えてはならない。なお、一賃金支払期に発生した数事案に対する減給の総額が当該賃金支払期の賃金総額の10分の1を超える場合には、その超える部分を次の賃金支払期に繰り越して減給することができる。",
+                answer: true,
+                ref: "労働基準法第91条、昭23.9.20基収1789号",
+                explanation: "正しい記述です。減給の制裁の制限（1回につき平均賃金1日分の半額以内、かつ一賃金支払期の総額の10分の1以内）において、10分の1を超える分を翌月以降に繰り越して減給することは適法です。"
+            },
+            {
+                id: 185,
+                category: "就業規則・制裁・監督等",
+                year: "令和3年",
+                text: "就業規則に定める懲戒処分としての「出勤停止」は、その期間中の賃金が支払われないため、出勤停止期間中の不就労賃金額が平均賃金の1日分の半額を超える場合であっても、労働基準法第91条の減給の制裁の制限に違反する。",
+                answer: false,
+                ref: "労働基準法第91条、昭23.7.3基収2177号",
+                explanation: "誤りです。出勤停止は、就労を禁止しその結果としてノーワーク・ノーペイの原則により賃金が支払われないものにすぎず、労働した分の賃金から差し引く「減給の制裁」ではないため、第91条の制限は適用されません（降格に伴う賃金減額も同様です）。"
+            },
+            {
+                id: 186,
+                category: "就業規則・制裁・監督等",
+                year: "令和2年",
+                text: "就業規則は、法令又は当該事業場について適用される労働協約に反してはならず、また、労働契約と就業規則との関係においては、就業規則で定める基準に達しない労働条件を定める労働契約は、その部分については無効となり、無効となった部分は就業規則で定める基準による。",
+                answer: true,
+                ref: "労働基準法第92条第1項・第93条、労働契約法第12条",
+                explanation: "正しい記述です。効力の優先順位は「法令 ＞ 労働協約 ＞ 就業規則 ＞ 労働契約」の順となります。"
+            },
+            {
+                id: 187,
+                category: "就業規則・制裁・監督等",
+                year: "令和元年",
+                text: "就業規則が拘束力を生ずる（効力が発生する）ためには、労働基準監督署長への届出だけでなく、何らかの方法によって労働者に周知させる手続がとられていることを要する。",
+                answer: true,
+                ref: "労働基準法第106条第1項、最判平15.10.10（フジ興産事件）",
+                explanation: "正しい記述です。最高裁判例（フジ興産事件）により、就業規則が法的規範として拘束力を生ずるためには、その内容を適用を受ける事業場の労働者に「周知」させる手続がとられていることが必要とされています。"
+            },
+            {
+                id: 188,
+                category: "就業規則・制裁・監督等",
+                year: "平成30年",
+                text: "使用者は、労働基準法及びこれに基づく命令の要旨、就業規則、労使協定並びに労使委員会の決議を、常時各作業場の見やすい場所へ掲示し、又は備え付けること、書面を交付すること等の方法によって、労働者に周知させなければならないが、令和6年4月の法改正により、周知すべき事項に「裁量労働制に関する同意の撤回の手続」も含まれることとなった。",
+                answer: true,
+                ref: "労働基準法第106条第1項、同法施行規則第52条の2",
+                explanation: "正しい記述です。労使協定や労使委員会決議の周知義務（掲示・備付け、書面交付、またはイントラネット等のパソコン等で常時確認できる状態にすること）に関する正しい記述です。"
+            },
+            {
+                id: 189,
+                category: "就業規則・制裁・監督等",
+                year: "平成29年",
+                text: "使用者は、事業の附属寄宿舎に寄宿する労働者の私生活の自由を侵してはならず、寮長、室長その他寄宿舎生活の自治に必要な役員の選任に干渉してはならない。また、常時10人以上の労働者を就業させる事業等の附属寄宿舎を設置し、移転し、又は変更しようとする場合においては、工事着手14日前までにその計画を行政官庁に届け出なければならない。",
+                answer: true,
+                ref: "労働基準法第94条第1項・第2項、第96条の2第1項",
+                explanation: "正しい記述です。寄宿舎の自治の尊重（第94条）および寄宿舎の設置・移転・変更計画の届出（工事着手14日前まで・第96条の2）の正しい規定です。"
+            },
+            {
+                id: 190,
+                category: "就業規則・制裁・監督等",
+                year: "平成28年",
+                text: "使用者は、事業の附属寄宿舎に労働者を寄宿させる場合においては、寄宿舎規則を作成し、行政官庁に届け出なければならないが、寄宿舎規則の作成又は変更については、寄宿舎に寄宿する労働者の過半数を代表する者の「同意」を得なければならない。",
+                answer: true,
+                ref: "労働基準法第95条第1項・第2項",
+                explanation: "正しい記述です。就業規則（第90条）は労働者代表の「意見聴取」で足りますが、寄宿舎規則（第95条）の作成・変更（寄宿舎の生活秩序等に関する規定）には、寄宿舎に寄宿する労働者の過半数を代表する者の「同意」が必要です（この違いは試験で極めてよく問われます）。"
+            },
+            {
+                id: 191,
+                category: "就業規則・制裁・監督等",
+                year: "令和7年",
+                text: "労働基準監督官は、事業場、寄宿舎その他の附属建設物に臨検し、帳簿及び書類の提出を求め、又は使用者若しくは労働者に対して尋問を行うことができるが、労働基準法違反の罪について、刑事訴訟法に規定する司法警察官の職務を行う権限も有している。",
+                answer: true,
+                ref: "労働基準法第101条第1項・第102条",
+                explanation: "正しい記述です。労働基準監督官には、行政監督権限（臨検・尋問・帳簿提出要求等）と、司法警察官としての職務権限（捜査・逮捕・送検等）の両方が付与されています。"
+            },
+            {
+                id: 192,
+                category: "就業規則・制裁・監督等",
+                year: "令和6年",
+                text: "事業場に労働基準法又はこれに基づく命令に違反する事実がある場合においては、労働者は、その事実を行政官庁又は労働基準監督官に申告することができ、使用者は、その申告をしたことを理由として、労働者に対して解雇その他不利益な取扱いをすることを禁止されている。",
+                answer: true,
+                ref: "労働基準法第104条第1項・第2項",
+                explanation: "正しい記述です。監督機関に対する申告権の保障および申告を理由とする不利益取扱いの禁止（違反には6か月以下の懲役又は30万円以下の罰金）です。"
+            },
+            {
+                id: 193,
+                category: "就業規則・制裁・監督等",
+                year: "令和5年",
+                text: "使用者は、各事業場ごとに労働者名簿を、各労働者（日々雇い入れられる者を除く。）について調製し、労働者の氏名、生年月日、履歴、性別、住所、従事する業務の種類（常時30人未満の労働者を使用する事業場では記入不要）、雇入れの年月日、退職の年月日及びその事由（解雇の場合はその理由を含む）、死亡の年月日及びその原因を記入しなければならない。",
+                answer: true,
+                ref: "労働基準法第107条第1項、同法施行規則第53条第1項・第3項",
+                explanation: "正しい記述です。日雇労働者は労働者名簿の調製対象外であり、常時30人未満の事業場では「従事する業務の種類」の記入は不要です。保存期間は労働者の死亡、退職又は解雇の日から5年間（経過措置により当分の間は3年間）です。"
+            },
+            {
+                id: 194,
+                category: "就業規則・制裁・監督等",
+                year: "令和4年",
+                text: "使用者は、労働者名簿、賃金台帳及び雇入れ、解雇、災害補償、賃金その他労働関係に関する重要な書類を5年間（経過措置により当分の間は3年間）保存しなければならないが、その起算日は、賃金台帳については最後の記入をした日、雇入れに関する書類については労働者の雇入れの日である。",
+                answer: false,
+                ref: "労働基準法第109条、同法施行規則第56条",
+                explanation: "誤りです。記録保存期間の起算日は、①労働者名簿＝労働者の死亡・退職・解雇の日、②賃金台帳＝最後の記入をした日、③雇入れ・退職に関する書類＝労働者の死亡・退職・解雇の日（「雇入れの日」ではありません！）、④災害補償に関する書類＝災害補償を終った日、⑤賃金その他労働関係に関する重要な書類＝その完結の日です。"
+            },
+            {
+                id: 195,
+                category: "就業規則・制裁・監督等",
+                year: "令和3年",
+                text: "労働者又は労働者になろうとする者は、その戸籍に関し戸籍事務を掌る者又はその代理者に対して、無料で証明を請求することができ、使用者が、労働者又は労働者になろうとする者の戸籍に関する証明を請求する場合においても、同様に無料で証明を請求することができる。",
+                answer: true,
+                ref: "労働基準法第111条",
+                explanation: "正しい記述です。労働者・求職者本人だけでなく、使用者も労働者等の戸籍に関する証明（住民票記載事項証明書等）を無料で請求することができます。"
+            },
+            {
+                id: 196,
+                category: "就業規則・制裁・監督等",
+                year: "令和2年",
+                text: "労働基準法の罰則は、法人の代表者又は法人若しくは人の代理人、使用人その他の従業者が、その法人又は人の業務に関して同法の違反行為をした場合においては、行為者を罰するほか、その法人又は人に対しても各本条の罰金刑を科する（両罰規定）が、その違反の防止に必要な措置をした場合においては、この限りでない。",
+                answer: true,
+                ref: "労働基準法第121条第1項・ただし書",
+                explanation: "正しい記述です。両罰規定により行為者と事業主（法人等）の双方が処罰されますが、事業主が違反防止に必要な措置を講じていた場合は免責されます。"
+            },
+            {
+                id: 197,
+                category: "就業規則・制裁・監督等",
+                year: "令和元年",
+                text: "労働基準法第75条から第88条までに定める「災害補償」の制度において、労働者が業務上負傷し、又は疾病にかかり療養開始後3年を経過しても負傷又は疾病がなおらない場合においては、使用者は、平均賃金の1,200日分の打切補償を行い、その後はこの法律の規定による補償を行わないことができる。",
+                answer: true,
+                ref: "労働基準法第81条",
+                explanation: "正しい記述です。療養開始後3年経過時に平均賃金の1,200日分の打切補償を支払う（または労災保険の傷病補償年金を受ける）ことで、その後の補償義務および第19条の解雇制限が解除されます。"
+            },
+            {
+                id: 198,
+                category: "就業規則・制裁・監督等",
+                year: "平成30年",
+                text: "労働者が業務上負傷し、又は疾病にかかった場合において、同一の事由について労働者災害補償保険法によって労働基準法の災害補償に相当する保険給付が行われるべきものであるときは、使用者は、補償の責を免れるが、休業補償の最初の3日間（待期期間）については、労災保険の休業補償給付が支給されないため、使用者が労働基準法第76条に基づき平均賃金の100分の60の休業補償を行わなければならない。",
+                answer: true,
+                ref: "労働基準法第76条第1項・第84条第1項、労働者災害補償保険法第14条第1項",
+                explanation: "正しい記述です。労災保険の休業補償給付は休業4日目から支給されるため、最初の3日間（待期期間）については使用者が労基法第76条に基づき平均賃金の60％の休業補償を行う義務があります（通勤災害の場合は労基法の災害補償の対象外であるため、待期期間の補償義務はありません）。"
+            },
+            {
+                id: 199,
+                category: "就業規則・制裁・監督等",
+                year: "平成29年",
+                text: "労働基準法第84条第2項は、「使用者がこの法律による補償を行つた場合においては、同一の事由については、その価額の限度において民法による損害賠償の責を免れる。」と規定しているが、労働者が業務災害により死亡した場合に遺族に対して支給される労災保険の遺族補償年金について、最高裁判所の判例によれば、将来支給されるべき遺族補償年金の額を損害賠償額から控除することはできない。",
+                answer: true,
+                ref: "労働基準法第84条第2項、最判昭52.10.25",
+                explanation: "正しい記述です。最高裁判例では、すでに支給された遺族補償年金や支給が確定している分は損害賠償額から控除できますが、将来にわたり支給されるべき不確定な遺族補償年金（前払一時金最高限度額を超える部分等）は控除できないとされています。"
+            },
+            {
+                id: 200,
+                category: "就業規則・制裁・監督等",
+                year: "平成28年",
+                text: "労働者が重大な過失によって業務上負傷し、又は疾病にかかり、かつ使用者がその過失について行政官庁の認定を受けた場合においては、使用者は、休業補償又は障害補償を行わなくてもよいが、療養補償、遺族補償及び葬祭料については、労働者に重大な過失があった場合であっても支給制限を受けることはない。",
+                answer: true,
+                ref: "労働基準法第78条",
+                explanation: "正しい記述です。労働者の重大な過失＋行政官庁の認定による災害補償の例外（第78条）の対象となるのは、「休業補償」と「障害補償」の2つのみです。療養補償、遺族補償、葬祭料は減額・不支給の対象になりません。"
+            }
+        ];
+
+        // ※第97問のanswerフラグの整合性修正（解説どおり正しい記述のためtrueに設定）
+        QUESTIONS_DB.find(q => q.id === 97).answer = true;
+
+        // =========================================================================
+        // アプリケーション状態管理
+        // =========================================================================
+        const STORAGE_KEY = 'sharoushi_roukihou_200_state_v1';
+
+        let appState = {
+            // answers: { [questionId]: { userChoice: boolean, isCorrect: boolean } }
+            answers: {},
+            // bookmarks: { [questionId]: true }
+            bookmarks: {},
+            // 現在のフィルター条件
+            filters: {
+                category: 'all',
+                year: 'all',
+                status: 'all'
+            },
+            // 現在表示中の問題ID
+            currentQuestionId: 1
+        };
+
+        let filteredQuestions = [...QUESTIONS_DB];
+        let tempUserChoice = null; // 解答ボタンを押す前の選択状態（true / false / null）
+
+        // =========================================================================
+        // 初期化とローカルストレージ管理
+        // =========================================================================
+        function initApp() {
+            loadState();
+            // フィルターUIを復元
+            document.getElementById('filter-category').value = appState.filters.category;
+            document.getElementById('filter-year').value = appState.filters.year;
+            document.getElementById('filter-status').value = appState.filters.status;
+
+            applyFilters(false);
+            updateStats();
+            renderQuestionGrid();
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    appState = {
+                        ...appState,
+                        ...parsed,
+                        filters: { ...appState.filters, ...(parsed.filters || {}) }
+                    };
+                }
+            } catch (e) {
+                console.error('Failed to load state:', e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                console.error('Failed to save state:', e);
+            }
+        }
+
+        // =========================================================================
+        // フィルタリング処理
+        // =========================================================================
+        function applyFilters(resetIndex = true) {
+            const cat = document.getElementById('filter-category').value;
+            const yr = document.getElementById('filter-year').value;
+            const st = document.getElementById('filter-status').value;
+
+            appState.filters = { category: cat, year: yr, status: st };
+            saveState();
+
+            filteredQuestions = QUESTIONS_DB.filter(q => {
+                if (cat !== 'all' && q.category !== cat) return false;
+                if (yr !== 'all' && q.year !== yr) return false;
+
+                const ans = appState.answers[q.id];
+                const isBookmarked = !!appState.bookmarks[q.id];
+
+                if (st === 'unanswered' && ans !== undefined) return false;
+                if (st === 'incorrect' && (!ans || ans.isCorrect)) return false;
+                if (st === 'bookmarked' && !isBookmarked) return false;
+
+                return true;
+            });
+
+            if (filteredQuestions.length === 0) {
+                document.getElementById('question-container').classList.add('hidden');
+                document.getElementById('empty-state').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('question-container').classList.remove('hidden');
+            document.getElementById('empty-state').classList.add('hidden');
+
+            if (resetIndex || !filteredQuestions.some(q => q.id === appState.currentQuestionId)) {
+                appState.currentQuestionId = filteredQuestions[0].id;
+            }
+
+            renderCurrentQuestion();
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-category').value = 'all';
+            document.getElementById('filter-year').value = 'all';
+            document.getElementById('filter-status').value = 'all';
+            applyFilters(true);
+        }
+
+        // =========================================================================
+        // 問題表示と操作ロジック
+        // =========================================================================
+        function renderCurrentQuestion() {
+            const currentIndex = filteredQuestions.findIndex(q => q.id === appState.currentQuestionId);
+            const question = filteredQuestions[currentIndex] || filteredQuestions[0];
+            appState.currentQuestionId = question.id;
+            saveState();
+
+            // メタ情報更新
+            document.getElementById('q-number-badge').textContent = `第 ${question.id} 問`;
+            document.getElementById('q-category-badge').textContent = question.category;
+            document.getElementById('q-year-badge').textContent = `${question.year}出題`;
+            document.getElementById('q-filtered-pos').textContent = `${currentIndex + 1} / ${filteredQuestions.length}`;
+            document.getElementById('q-text').textContent = question.text;
+
+            // ブックマーク状態更新
+            updateBookmarkIcon(question.id);
+
+            // 過去の解答履歴バッジ
+            const historyBadge = document.getElementById('q-history-badge');
+            const prevAns = appState.answers[question.id];
+            if (prevAns) {
+                historyBadge.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-700', 'bg-rose-100', 'text-rose-700');
+                if (prevAns.isCorrect) {
+                    historyBadge.classList.add('bg-emerald-100', 'text-emerald-700');
+                    historyBadge.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>前回：正解';
+                } else {
+                    historyBadge.classList.add('bg-rose-100', 'text-rose-700');
+                    historyBadge.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i>前回：不正解';
+                }
+            } else {
+                historyBadge.classList.add('hidden');
+            }
+
+            // 選択状態と解答パネルのリセット
+            tempUserChoice = null;
+            resetChoiceButtonsUI();
+            document.getElementById('instant-feedback').classList.add('hidden');
+            document.getElementById('answer-panel').classList.add('hidden');
+
+            // 前へ・次へボタンの制御
+            document.getElementById('btn-prev').disabled = (currentIndex <= 0);
+            document.getElementById('btn-next').disabled = (currentIndex >= filteredQuestions.length - 1);
+        }
+
+        function resetChoiceButtonsUI() {
+            const btnTrue = document.getElementById('btn-choice-true');
+            const btnFalse = document.getElementById('btn-choice-false');
+
+            btnTrue.className = "btn-press flex flex-col items-center justify-center py-4 px-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-brand-400 hover:bg-brand-50/40 transition shadow-sm";
+            btnFalse.className = "btn-press flex flex-col items-center justify-center py-4 px-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-brand-400 hover:bg-brand-50/40 transition shadow-sm";
+        }
+
+        function selectChoice(choice) {
+            const question = QUESTIONS_DB.find(q => q.id === appState.currentQuestionId);
+            if (!question) return;
+
+            tempUserChoice = choice;
+            const isCorrect = (choice === question.answer);
+
+            // 成績を記録して統計・一覧を更新
+            appState.answers[question.id] = {
+                userChoice: choice,
+                isCorrect: isCorrect
+            };
+            saveState();
+            updateStats();
+            renderQuestionGrid();
+
+            // ボタンのスタイルを正誤に応じて即時変化
+            resetChoiceButtonsUI();
+            const targetBtn = choice === true
+                ? document.getElementById('btn-choice-true')
+                : document.getElementById('btn-choice-false');
+
+            targetBtn.classList.remove('border-slate-200', 'bg-white');
+            if (isCorrect) {
+                targetBtn.classList.add('border-emerald-500', 'bg-emerald-50', 'ring-2', 'ring-emerald-200');
+            } else {
+                targetBtn.classList.add('border-rose-500', 'bg-rose-50', 'ring-2', 'ring-rose-200');
+            }
+
+            // ○×ボタン直下に即時の正誤リアクションを表示
+            const instantBox = document.getElementById('instant-feedback');
+            const instantIcon = document.getElementById('instant-icon');
+            const instantTitle = document.getElementById('instant-title');
+            const instantSubtitle = document.getElementById('instant-subtitle');
+            const instantSymbol = document.getElementById('instant-correct-symbol');
+
+            // アニメーション再発火のためクラスを付け直し
+            instantBox.classList.remove('hidden', 'pop-bounce', 'bg-emerald-50', 'border-emerald-300', 'text-emerald-900', 'bg-rose-50', 'border-rose-300', 'text-rose-900');
+            void instantBox.offsetWidth;
+            instantBox.classList.add('border', 'pop-bounce');
+
+            instantSymbol.textContent = question.answer ? '○' : '×';
+
+            if (isCorrect) {
+                instantBox.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-900');
+                instantIcon.className = "w-9 h-9 rounded-full flex items-center justify-center bg-emerald-600 text-white text-lg shrink-0";
+                instantIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                instantTitle.textContent = "正解！";
+                instantSubtitle.textContent = "下のボタンから根拠条文・解説を確認できます";
+                instantSymbol.className = "text-2xl font-extrabold leading-none text-emerald-600";
+            } else {
+                instantBox.classList.add('bg-rose-50', 'border-rose-300', 'text-rose-900');
+                instantIcon.className = "w-9 h-9 rounded-full flex items-center justify-center bg-rose-600 text-white text-lg shrink-0";
+                instantIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                instantTitle.textContent = "不正解…";
+                instantSubtitle.textContent = "下のボタンから根拠条文・解説を確認しましょう";
+                instantSymbol.className = "text-2xl font-extrabold leading-none text-rose-600";
+            }
+
+            // すでに解説パネルが開いている場合は内容もリアルタイム更新
+            if (!document.getElementById('answer-panel').classList.contains('hidden')) {
+                checkAnswer();
+            }
+        }
+
+        function checkAnswer() {
+            const question = QUESTIONS_DB.find(q => q.id === appState.currentQuestionId);
+            if (!question) return;
+
+            const answerPanel = document.getElementById('answer-panel');
+            const resultBanner = document.getElementById('result-banner');
+            const resultIcon = document.getElementById('result-icon');
+            const resultTitle = document.getElementById('result-title');
+            const resultSubtitle = document.getElementById('result-subtitle');
+            const correctSymbol = document.getElementById('correct-answer-symbol');
+
+            // 正解シンボル表示
+            correctSymbol.textContent = question.answer ? '○' : '×';
+
+            // ユーザーが○か×を選択していた場合は正誤判定＆記録
+            if (tempUserChoice !== null) {
+                const isCorrect = (tempUserChoice === question.answer);
+                appState.answers[question.id] = {
+                    userChoice: tempUserChoice,
+                    isCorrect: isCorrect
+                };
+                saveState();
+                updateStats();
+                renderQuestionGrid();
+
+                resultBanner.className = "rounded-xl p-4 mb-4 flex items-center justify-between";
+                if (isCorrect) {
+                    resultBanner.classList.add('bg-emerald-50', 'border', 'border-emerald-200', 'text-emerald-900');
+                    resultIcon.className = "w-10 h-10 rounded-full flex items-center justify-center bg-emerald-600 text-white text-xl";
+                    resultIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    resultTitle.textContent = "正解です！";
+                    resultSubtitle.textContent = `あなたの回答：${tempUserChoice ? '○（正しい）' : '×（誤り）'}`;
+                    correctSymbol.className = "text-3xl font-extrabold text-emerald-600";
+                } else {
+                    resultBanner.classList.add('bg-rose-50', 'border', 'border-rose-200', 'text-rose-900');
+                    resultIcon.className = "w-10 h-10 rounded-full flex items-center justify-center bg-rose-600 text-white text-xl";
+                    resultIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                    resultTitle.textContent = "不正解です";
+                    resultSubtitle.textContent = `あなたの回答：${tempUserChoice ? '○（正しい）' : '×（誤り）'}`;
+                    correctSymbol.className = "text-3xl font-extrabold text-rose-600";
+                }
+            } else {
+                // 未選択のまま「解答を確認する」を押した場合
+                resultBanner.className = "rounded-xl p-4 mb-4 flex items-center justify-between bg-slate-100 border border-slate-300 text-slate-800";
+                resultIcon.className = "w-10 h-10 rounded-full flex items-center justify-center bg-slate-600 text-white text-lg";
+                resultIcon.innerHTML = '<i class="fa-solid fa-lightbulb"></i>';
+                resultTitle.textContent = "解答・解説の確認";
+                resultSubtitle.textContent = "※○または×を選択すると正誤が記録されます";
+                correctSymbol.className = `text-3xl font-extrabold ${question.answer ? 'text-rose-600' : 'text-blue-600'}`;
+            }
+
+            // 解説・条文をセット
+            document.getElementById('q-law-ref').textContent = question.ref;
+            document.getElementById('q-explanation').textContent = question.explanation;
+
+            answerPanel.classList.remove('hidden');
+
+            // スマホ等で解説が見やすい位置へスムーズスクロール
+            setTimeout(() => {
+                answerPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 50);
+        }
+
+        function prevQuestion() {
+            const currentIndex = filteredQuestions.findIndex(q => q.id === appState.currentQuestionId);
+            if (currentIndex > 0) {
+                appState.currentQuestionId = filteredQuestions[currentIndex - 1].id;
+                renderCurrentQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function nextQuestion() {
+            const currentIndex = filteredQuestions.findIndex(q => q.id === appState.currentQuestionId);
+            if (currentIndex < filteredQuestions.length - 1) {
+                appState.currentQuestionId = filteredQuestions[currentIndex + 1].id;
+                renderCurrentQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function randomQuestion() {
+            if (filteredQuestions.length <= 1) return;
+            let nextQ;
+            do {
+                const randIdx = Math.floor(Math.random() * filteredQuestions.length);
+                nextQ = filteredQuestions[randIdx];
+            } while (nextQ.id === appState.currentQuestionId);
+
+            appState.currentQuestionId = nextQ.id;
+            renderCurrentQuestion();
+            showToast(`第 ${nextQ.id} 問をランダム出題しました`);
+        }
+
+        // =========================================================================
+        // ブックマーク（要復習チェック）機能
+        // =========================================================================
+        function toggleBookmark() {
+            const qId = appState.currentQuestionId;
+            if (appState.bookmarks[qId]) {
+                delete appState.bookmarks[qId];
+                showToast('要復習マークを解除しました');
+            } else {
+                appState.bookmarks[qId] = true;
+                showToast('要復習マークをつけました');
+            }
+            saveState();
+            updateBookmarkIcon(qId);
+            renderQuestionGrid();
+        }
+
+        function updateBookmarkIcon(qId) {
+            const btn = document.getElementById('bookmark-btn');
+            if (appState.bookmarks[qId]) {
+                btn.innerHTML = '<i class="fa-solid fa-star text-lg text-amber-400"></i>';
+            } else {
+                btn.innerHTML = '<i class="fa-regular fa-star text-lg text-slate-400"></i>';
+            }
+        }
+
+        // =========================================================================
+        // 統計・進捗表示の更新
+        // =========================================================================
+        function updateStats() {
+            const answeredIds = Object.keys(appState.answers);
+            const answeredCount = answeredIds.length;
+            const correctCount = answeredIds.filter(id => appState.answers[id].isCorrect).length;
+            const rate = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+            const progressPercent = Math.round((answeredCount / QUESTIONS_DB.length) * 100);
+
+            document.getElementById('stat-answered').textContent = answeredCount;
+            document.getElementById('stat-correct').textContent = correctCount;
+            document.getElementById('stat-rate').textContent = rate;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+        }
+
+        // =========================================================================
+        // 問題一覧モーダル
+        // =========================================================================
+        function toggleListModal() {
+            const modal = document.getElementById('list-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                renderQuestionGrid();
+            }
+        }
+
+        function renderQuestionGrid() {
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = '';
+
+            QUESTIONS_DB.forEach(q => {
+                const btn = document.createElement('button');
+                const ans = appState.answers[q.id];
+                const isBookmarked = !!appState.bookmarks[q.id];
+                const isCurrent = (q.id === appState.currentQuestionId);
+
+                let styleClass = "bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200";
+                if (ans) {
+                    if (ans.isCorrect) {
+                        styleClass = "bg-emerald-500 text-white hover:bg-emerald-600 border-emerald-600";
+                    } else {
+                        styleClass = "bg-rose-500 text-white hover:bg-rose-600 border-rose-600";
+                    }
+                }
+                if (isCurrent) {
+                    styleClass += " ring-2 ring-brand-600 ring-offset-1";
+                }
+
+                btn.className = `relative py-2 rounded-lg text-xs font-bold border transition ${styleClass}`;
+                btn.textContent = q.id;
+                if (isBookmarked) {
+                    btn.innerHTML += `<span class="absolute -top-1 -right-1 text-[10px] text-amber-400 drop-shadow"><i class="fa-solid fa-star"></i></span>`;
+                }
+
+                btn.onclick = () => {
+                    // 一覧から直接選んだ場合はフィルターを全表示に戻してジャンプ
+                    document.getElementById('filter-category').value = 'all';
+                    document.getElementById('filter-year').value = 'all';
+                    document.getElementById('filter-status').value = 'all';
+                    appState.currentQuestionId = q.id;
+                    applyFilters(false);
+                    toggleListModal();
+                };
+
+                grid.appendChild(btn);
+            });
+        }
+
+        // =========================================================================
+        // リセット確認モーダル＆トースト通知
+        // =========================================================================
+        function confirmReset() {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title').textContent = '学習履歴のリセット';
+            document.getElementById('modal-message').textContent = 'これまでの解答履歴（正解・不正解の記録）および要復習マークをすべて消去しますか？';
+            document.getElementById('modal-confirm-btn').onclick = () => {
+                appState.answers = {};
+                appState.bookmarks = {};
+                saveState();
+                updateStats();
+                applyFilters(false);
+                renderQuestionGrid();
+                closeCustomModal();
+                showToast('学習履歴をリセットしました');
+            };
+            modal.classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2200);
+        }
+
+        // アプリ起動
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
